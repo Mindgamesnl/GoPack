@@ -367,8 +367,53 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("minecart_furnace", rename("minecart_furnace", "furnace_minecart"))
 
 	// garbage
-	
+	pipeline.AddPathContainsHandler("book_normal", rename("book_normal", "book"))
+	pipeline.AddPathContainsHandler("book_enchanted", rename("book_enchanted", "enchanted_book"))
+	pipeline.AddPathContainsHandler("book_written", rename("book_written", "written_book"))
+	pipeline.AddPathContainsHandler("book_writable", rename("book_writable", "writable_book"))
+	pipeline.AddPathContainsHandler("seeds_wheat", rename("seeds_wheat", "wheat_seeds"))
+	pipeline.AddPathContainsHandler("seeds_pumpkin", rename("seeds_pumpkin", "pumpkin_seeds"))
+	pipeline.AddPathContainsHandler("seeds_melon", rename("seeds_melon", "melon_seeds"))
+	pipeline.AddPathContainsHandler("reeds", rename("reeds", "sugar_cane"))
+	pipeline.AddPathContainsHandler("bow_standby", rename("bow_standby", "bow"))
+	pipeline.AddPathContainsHandler("bucket_water", rename("bucket_water", "water_bucket"))
+	pipeline.AddPathContainsHandler("bucket_lava", rename("bucket_lava", "lava_bucket"))
+	pipeline.AddPathContainsHandler("bucket_milk", rename("bucket_milk", "milk_bucket"))
+	pipeline.AddPathContainsHandler("bucket_empty", rename("bucket_empty", "bucket"))
+	pipeline.AddPathContainsHandler("apple_golden", rename("apple_golden", "golden_apple"))
+	pipeline.AddPathContainsHandler("totem", rename("totem", "totem_of_undying"))
+	pipeline.AddPathContainsHandler("potion_bottle_lingering", rename("potion_bottle_lingering", "lingering_potion"))
+	pipeline.AddPathContainsHandler("potion_bottle_splash", rename("potion_bottle_splash", "splash_potion"))
+	pipeline.AddPathContainsHandler("potion_bottle_drinkable", rename("potion_bottle_drinkable", "potion"))
+	pipeline.AddPathContainsHandler("potion_bottle_empty", rename("potion_bottle_empty", "glass_bottle"))
+	pipeline.AddPathContainsHandler("fireball", rename("fireball", "fire_charge"))
+	pipeline.AddPathContainsHandler("slimeball", rename("slimeball", "slime_ball"))
+	pipeline.AddPathContainsHandler("redstone_dust", rename("redstone_dust", "redstone"))
+	pipeline.AddPathContainsHandler("fireworks", rename("fireworks", "firework_rocket"))
+	pipeline.AddPathContainsHandler("wooden_armorstand", rename("wooden_armorstand", "armor_stand"))
+	pipeline.AddPathContainsHandler("fireworks_charge", rename("fireworks_charge", "firework_star"))
+	pipeline.AddPathContainsHandler("fireworks_charge_overlay", rename("fireworks_charge_overlay", "firework_star_overlay"))
+	pipeline.AddPathContainsHandler("spider_eye_fermented", rename("spider_eye_fermented", "fermented_spider_eye"))
+	pipeline.AddPathContainsHandler("netherbrick", rename("netherbrick", "nether_brick"))
+	pipeline.AddPathContainsHandler("map_empty", rename("map_empty", "map"))
+	pipeline.AddPathContainsHandler("fishing_rod_uncast", rename("fishing_rod_uncast", "fishing_rod"))
+	pipeline.AddPathContainsHandler("melon", rename("melon", "melon_slice"))
+	pipeline.AddPathContainsHandler("melon_speckled", rename("melon_speckled", "glistering_melon_slice"))
+	pipeline.AddPathContainsHandler("chorus_fruit_popped", rename("chorus_fruit_popped", "popped_chorus_fruit"))
+	pipeline.AddPathContainsHandler("clownfish", rename("clownfish", "tropical_fish"))
 
+	// entities
+	pipeline.AddPathContainsHandler("shulker_silver", rename("shulker_silver", "shulker_light_gray"))
+	pipeline.AddPathContainsHandler("shulker_purple", rename("shulker_purple", "shulker"))
+	pipeline.AddPathContainsHandler("/silver.", rename("silver", "light_gray"))
+	pipeline.AddPathContainsHandler("fangs", rename("fangs", "evoker_fangs"))
+	pipeline.AddPathContainsHandler("wither_invul", rename("wither_invul", "wither_invulnerable"))
+	pipeline.AddPathContainsHandler("llama_brown", rename("llama_brown", "brown"))
+	pipeline.AddPathContainsHandler("llama_creamy", rename("llama_creamy", "creamy"))
+	pipeline.AddPathContainsHandler("llama_gray", rename("llama_gray", "gray"))
+	pipeline.AddPathContainsHandler("llama_white", rename("llama_white", "white"))
+
+	// WHOOOO THATS ITTT
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
