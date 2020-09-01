@@ -8,9 +8,9 @@ import (
 func RegisterPipelines()  {
 	logrus.Info("Starting pipelines")
 	logrus.Info("Initializing pipelines took ", + gutils.TimeFunction(func() {
-		Make111Pipeline()
-		Make113Pipeline()
+		// Make111Pipeline()
+		// Make113Pipeline()
 		Make115Pipeline()
-		Make116Pipeline()
+		// Make116Pipeline()
 	}), "MS")
 }

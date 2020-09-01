@@ -2,6 +2,7 @@ package gopack
 
 import (
 	"github.com/Mindgamesnl/GoPack/gopack/utils"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"strconv"
@@ -63,6 +64,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		"lime",
 		"pink",
 		"gray",
+		"light_gray",
 		"light_gray",
 		"cyan",
 		"purple",
@@ -240,6 +242,9 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("mushroom_red", rename("mushroom_red", "red_mushroom"))
 	pipeline.AddPathContainsHandler("mushroom_brown", rename("mushroom_brown", "brown_mushroom"))
 
+	// slabs
+	pipeline.AddPathContainsHandler("_slab_top", rename("_slab_top", "_slab"))
+
 	// rails, yoink
 	pipeline.AddPathContainsHandler("rail_normal_turned", rename("rail_normal_turned", "rail_corner"))
 	pipeline.AddPathContainsHandler("rail_activator_powered", rename("rail_activator_powered", "activator_rail_on"))
@@ -291,6 +296,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("quartz_ore", rename("quartz_ore", "nether_quartz_ore"))
 	pipeline.AddPathContainsHandler("itemframe_background", rename("itemframe_background", "item_frame"))
 	pipeline.AddPathContainsHandler("mob_spawner", rename("mob_spawner", "spawner"))
+	pipeline.AddPathContainsHandler("spade", rename("spade", "shovel"))
 
 	// okay, so, thats all the blocks
 	// now onto the items.. yoink
@@ -454,12 +460,37 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 					asString = strings.Replace(asString, s, textureNameMap[s], -1)
 				}
 
-				updatedJson, _ = sjson.Set(updatedJson, key, asString)
+				// one up
+				parent := key
+				parentParts := strings.Split(parent, ".")
+				parent = strings.Replace(parent, "." + parentParts[len(parentParts)-1], "", -1)
+
+				oldValues := gjson.Get(updatedJson, parent).Map()
+				oldStringValues := make(map[string]string)
+
+				for s := range oldValues {
+					oldStringValues[strings.Replace(s, parent, "", -1)] = oldValues[s].Str
+				}
+
+				oldStringValues[key] = asString
+
+				for s := range oldStringValues {
+					var err error
+					updatedJson, err = sjson.Set(updatedJson, parent, oldStringValues)
+					if err != nil {
+						logrus.Info("item ", resource.GetPipelineString(pipeline))
+						logrus.Info("key " + s)
+						panic(err)
+					}
+				}
 				updated = true
 			}
 		}
 
 		if updated {
+			if len(updatedJson) < 5 {
+				logrus.Info("Writing small file, ", resource.Path)
+			}
 			pipeline.SaveFile(resource, updatedJson)
 		}
 	})
