@@ -334,7 +334,41 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("record_stal", rename("record_stal", "music_disc_stal"))
 
 	// golden armor
+	pipeline.AddPathContainsHandler("gold_horse_armor", rename("gold_horse_armor", "golden_horse_armor"))
+	pipeline.AddPathContainsHandler("gold_helmet", rename("gold_helmet", "golden_helmet"))
+	pipeline.AddPathContainsHandler("gold_chestplate", rename("gold_chestplate", "golden_chestplate"))
+	pipeline.AddPathContainsHandler("gold_leggings", rename("gold_leggings", "golden_leggings"))
+	pipeline.AddPathContainsHandler("gold_boots", rename("gold_boots", "golden_boots"))
+
+	// dyes
+	pipeline.AddPathContainsHandler("dye_powder_black", rename("dye_powder_black", "ink_sac"))
+	pipeline.AddPathContainsHandler("dye_powder_blue", rename("dye_powder_blue", "lapis_lazuli"))
+	pipeline.AddPathContainsHandler("dye_powder_red", rename("dye_powder_red", "rose_red"))
+	pipeline.AddPathContainsHandler("dye_powder_cyan", rename("dye_powder_cyan", "cyan_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_gray", rename("dye_powder_gray", "gray_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_silver", rename("dye_powder_silver", "light_gray_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_yellow", rename("dye_powder_yellow", "dandelion_yellow"))
+	pipeline.AddPathContainsHandler("dye_powder_magenta", rename("dye_powder_magenta", "magenta_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_pink", rename("dye_powder_pink", "pink_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_light_blue", rename("dye_powder_light_blue", "light_blue_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_green", rename("dye_powder_green", "cactus_green"))
+	pipeline.AddPathContainsHandler("dye_powder_lime", rename("dye_powder_lime", "lime_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_brown", rename("dye_powder_brown", "cocoa_beans"))
+	pipeline.AddPathContainsHandler("dye_powder_orange", rename("dye_powder_orange", "orange_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_purple", rename("dye_powder_purple", "purple_dye"))
+	pipeline.AddPathContainsHandler("dye_powder_white", rename("dye_powder_white", "bone_meal"))
+
+	// minecart
+	pipeline.AddPathContainsHandler("minecart_normal", rename("minecart_normal", "minecart"))
+	pipeline.AddPathContainsHandler("minecart_chest", rename("minecart_chest", "chest_minecart"))
+	pipeline.AddPathContainsHandler("minecart_tnt", rename("minecart_tnt", "tnt_minecart"))
+	pipeline.AddPathContainsHandler("minecart_command_block", rename("minecart_command_block", "command_block_minecart"))
+	pipeline.AddPathContainsHandler("minecart_hopper", rename("minecart_hopper", "hopper_minecart"))
+	pipeline.AddPathContainsHandler("minecart_furnace", rename("minecart_furnace", "furnace_minecart"))
+
+	// garbage
 	
+
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
