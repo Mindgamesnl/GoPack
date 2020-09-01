@@ -1,4 +1,4 @@
-package packs
+package gopack
 
 type Face12 struct {
 	Down struct {

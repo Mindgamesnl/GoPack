@@ -1,4 +1,4 @@
-package packs
+package gopack
 
 import "encoding/json"
 

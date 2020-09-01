@@ -1,4 +1,4 @@
-package loader
+package gopack
 
 import (
 	"github.com/cheggaaa/pb/v3"

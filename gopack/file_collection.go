@@ -1,4 +1,4 @@
-package loader
+package gopack
 
 type FileCollection struct {
 	Root string

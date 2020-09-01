@@ -1,12 +1,12 @@
 package pipelines
 
 import (
-	"github.com/Mindgamesnl/GoPack/loader"
-	"github.com/Mindgamesnl/GoPack/pipelines/common_actions"
+	"github.com/Mindgamesnl/GoPack/gopack"
+	"github.com/Mindgamesnl/GoPack/gopack/common_actions"
 )
 
 func Make111Pipeline() {
-	pipeline := loader.CreatePipeline("to 1.11", "work/111/")
+	pipeline := gopack.CreatePipeline("to 1.11", "work/111/")
 
 	// update format
 	pipeline.AddForFileName("pack.mcmeta", common_actions.SetMetaRevision(3))
@@ -14,5 +14,5 @@ func Make111Pipeline() {
 	pipeline.AddForFileType("json", common_actions.RemoveComment())
 
 	pipeline.SaveUntouched()
-	loader.AddPipeline(&pipeline)
+	gopack.AddPipeline(&pipeline)
 }

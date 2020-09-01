@@ -1,12 +1,11 @@
 package main
 
 import (
-	"github.com/Mindgamesnl/GoPack/loader"
-	"github.com/Mindgamesnl/GoPack/pipelines"
+	"github.com/Mindgamesnl/GoPack/gopack"
 )
 
 func main() {
-	pack := loader.FromZip("pack.zip")
-	pipelines.RegisterPipelines()
-	loader.RunPipelines(pack)
+	pack := gopack.FromZip("pack.zip")
+	gopack.RegisterPipelines()
+	gopack.RunPipelines(pack)
 }

@@ -1,4 +1,4 @@
-package packs
+package gopack
 
 type PackMcMeta struct {
 	Pack struct {
