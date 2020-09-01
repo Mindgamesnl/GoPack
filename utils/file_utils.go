@@ -2,8 +2,10 @@ package utils
 
 import (
 	"archive/zip"
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,4 +65,18 @@ func Unzip(src string, dest string) ([]string, error) {
 		}
 	}
 	return filenames, nil
+}
+
+func TextFromFile(file string) string {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+func JsonToStruct(file string, target interface{}) interface{} {
+	data := TextFromFile(file)
+	json.Unmarshal([]byte(data), &target)
+	return target
 }
