@@ -1,7 +1,6 @@
 package gopack
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strings"
@@ -85,7 +84,6 @@ func (p *Pipeline) SaveUntouched() {
 
 func (p *Pipeline) FlushFiles() {
 	for s := range p.WriteQueue {
-		logrus.Info("Writing ", s)
 		writeBytes(s, p.WriteQueue[s])
 	}
 	p.WriteQueue = make(map[string][]byte)
