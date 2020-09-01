@@ -1,6 +1,7 @@
 package gopack
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -82,35 +83,71 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// BECAUSE WE GOT A MILLION AND ONE TYPES OF STONE THAT NEED CONVERTION TOO!
 	// WHOHOOO!
 	// my life is a meme
-	pipeline.AddPathContainsHandler("stone_andesite", rename("stone_andesite", "andesite"))
 	pipeline.AddPathContainsHandler("stone_andesite_smooth", rename("stone_andesite_smooth", "polished_andesite"))
-	pipeline.AddPathContainsHandler("stone_diorite", rename("stone_diorite", "diorite"))
+	pipeline.AddPathContainsHandler("stone_andesite", rename("stone_andesite", "andesite"))
 	pipeline.AddPathContainsHandler("stone_diorite_smooth", rename("stone_diorite_smooth", "polished_diorite"))
-	pipeline.AddPathContainsHandler("stone_granite", rename("stone_granite", "granite"))
+	pipeline.AddPathContainsHandler("stone_diorite", rename("stone_diorite", "diorite"))
 	pipeline.AddPathContainsHandler("stone_granite_smooth", rename("stone_granite_smooth", "polished_granite"))
+	pipeline.AddPathContainsHandler("stone_granite", rename("stone_granite", "granite"))
 
 	// even more stone..
 	pipeline.AddPathContainsHandler("cobblestone_mossy", rename("cobblestone_mossy", "mossy_cobblestone"))
-	pipeline.AddPathContainsHandler("stonebrick", rename("stonebrick", "stone_bricks"))
 	pipeline.AddPathContainsHandler("stonebrick_carved", rename("stonebrick_carved", "chiseled_stone_bricks"))
 	pipeline.AddPathContainsHandler("stonebrick_cracked", rename("stonebrick_cracked", "cracked_stone_bricks"))
 	pipeline.AddPathContainsHandler("stonebrick_mossy", rename("stonebrick_mossy", "mossy_stone_bricks"))
 	pipeline.AddPathContainsHandler("stonebrick_mossy", rename("stonebrick_mossy", "mossy_stone_bricks"))
+	pipeline.AddPathContainsHandler("stonebrick", rename("stonebrick", "stone_bricks"))
 
 	// sand stone, ofcource, yes sure, fuck you
 	pipeline.AddPathContainsHandler("sandstone_normal", rename("sandstone_normal", "sandstone"))
 	pipeline.AddPathContainsHandler("sandstone_carved", rename("sandstone_carved", "chiseled_sandstone"))
-	pipeline.AddPathContainsHandler("sandstone_smooth", rename("sandstone_smooth", "cut_sandstone"))
 	pipeline.AddPathContainsHandler("sandstone_smooth", rename("sandstone_smooth", "cut_sandstone"))
 
 	// lets do that again but for red sand stone, the colour of fucking blood, ew epic gamer moment right there
 	pipeline.AddPathContainsHandler("red_sandstone_normal", rename("red_sandstone_normal", "red_sandstone"))
 	pipeline.AddPathContainsHandler("red_sandstone_carved", rename("red_sandstone_carved", "chiseled_red_sandstone"))
 	pipeline.AddPathContainsHandler("red_sandstone_smooth", rename("red_sandstone_smooth", "cut_red_sandstone"))
-	pipeline.AddPathContainsHandler("red_sandstone_smooth", rename("red_sandstone_smooth", "cut_red_sandstone"))
 
 	// dirt! as a epic in game reference to the human dirt that is Notch, because i'm getting sick of this format
+	pipeline.AddPathContainsHandler("grass_side_overlay", rename("grass_side_overlay", "grass_block_side_overlay"))
+	pipeline.AddPathContainsHandler("grass_side_snowed", rename("grass_side_snowed", "grass_block_snow"))
+	pipeline.AddPathContainsHandler("grass_top", rename("grass_top", "grass_block_top"))
+	pipeline.AddPathContainsHandler("dirt_podzol_side", rename("dirt_podzol_side", "podzol_side"))
+	pipeline.AddPathContainsHandler("dirt_podzol_top", rename("dirt_podzol_top", "podzol_top"))
+	pipeline.AddPathContainsHandler("farmland_dry", rename("farmland_dry", "farmland"))
+	pipeline.AddPathContainsHandler("grass_side", rename("grass_side", "grass_block_side"))
 
+	// quartz! no hate here, i actually like quartz, used it in my first minecraft builds way back when
+	pipeline.AddPathContainsHandler("quartz_block_chiseled_top", rename("quartz_block_chiseled_top", "chiseled_quartz_block_top"))
+	pipeline.AddPathContainsHandler("quartz_block_lines_top", rename("quartz_block_lines_top", "quartz_pillar_top"))
+	pipeline.AddPathContainsHandler("quartz_block_lines", rename("quartz_block_lines", "quartz_pillar"))
+	pipeline.AddPathContainsHandler("quartz_block_chiseled", rename("quartz_block_chiseled", "chiseled_quartz_block"))
+
+	// melon things and stems, pretty epic yo
+	pipeline.AddPathContainsHandler("melon_stem_disconnected", rename("melon_stem_disconnected", "melon_stem"))
+	pipeline.AddPathContainsHandler("melon_stem_connected", rename("melon_stem_connected", "attached_melon_stem"))
+	pipeline.AddPathContainsHandler("pumpkin_stem_disconnected", rename("pumpkin_stem_disconnected", "pumpkin_stem"))
+	pipeline.AddPathContainsHandler("pumpkin_stem_connected", rename("pumpkin_stem_connected", "attached_pumpkin_stem"))
+	pipeline.AddPathContainsHandler("reeds", rename("reeds", "sugar_cane"))
+
+	// cheating again cuz im lazy lol
+	crops := [...]string{
+		"wheat",
+		"carrots",
+		"potatoes",
+		"nether_wart",
+		"beetroots",
+		"cocoa",
+	}
+
+	// lel
+	for i := range crops {
+		crop := crops[i]
+		for i2 := 0; i2 < 10; i2++ {
+			num := strconv.FormatInt(int64(i2), 10)
+			pipeline.AddPathContainsHandler(crop + "_stage_" + num, rename(crop + "_stage_" + num, crop + "_stage" + num))
+		}
+	}
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
