@@ -1,9 +1,10 @@
 package gopack
 
-import "strings"
+import (
+	"strings"
+)
 
 func ApplyFlatteningUpdate(pipeline *Pipeline) {
-
 	// https://blockbench.net/2018/07/18/changes-to-resource-packs-in-minecraft-1-13/
 
 	// flattening part one, rename `textures/blocks` to `/textures/block`
@@ -53,6 +54,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		"black",
 	}
 
+	// renaming a fuck ton of blocks, because mojang just likes to do that sometimes
 	for i := range colors {
 		color := colors[i]
 		// wool
@@ -72,7 +74,42 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		pipeline.AddPathContainsHandler("shulker_top_" + color, rename("shulker_top_" + color, color + "_shulker_box_top"))
 	}
 
+	// more renaming, because mojang just loves that
 	pipeline.AddPathContainsHandler("endercrystal", rename("endercrystal", "end_crystal"))
+
+	// EVEN MORE!
+	// MINECRAFT IS THE FUCKING GIFT THAT JUST KEEPS ON GIVING FOLKS
+	// BECAUSE WE GOT A MILLION AND ONE TYPES OF STONE THAT NEED CONVERTION TOO!
+	// WHOHOOO!
+	// my life is a meme
+	pipeline.AddPathContainsHandler("stone_andesite", rename("stone_andesite", "andesite"))
+	pipeline.AddPathContainsHandler("stone_andesite_smooth", rename("stone_andesite_smooth", "polished_andesite"))
+	pipeline.AddPathContainsHandler("stone_diorite", rename("stone_diorite", "diorite"))
+	pipeline.AddPathContainsHandler("stone_diorite_smooth", rename("stone_diorite_smooth", "polished_diorite"))
+	pipeline.AddPathContainsHandler("stone_granite", rename("stone_granite", "granite"))
+	pipeline.AddPathContainsHandler("stone_granite_smooth", rename("stone_granite_smooth", "polished_granite"))
+
+	// even more stone..
+	pipeline.AddPathContainsHandler("cobblestone_mossy", rename("cobblestone_mossy", "mossy_cobblestone"))
+	pipeline.AddPathContainsHandler("stonebrick", rename("stonebrick", "stone_bricks"))
+	pipeline.AddPathContainsHandler("stonebrick_carved", rename("stonebrick_carved", "chiseled_stone_bricks"))
+	pipeline.AddPathContainsHandler("stonebrick_cracked", rename("stonebrick_cracked", "cracked_stone_bricks"))
+	pipeline.AddPathContainsHandler("stonebrick_mossy", rename("stonebrick_mossy", "mossy_stone_bricks"))
+	pipeline.AddPathContainsHandler("stonebrick_mossy", rename("stonebrick_mossy", "mossy_stone_bricks"))
+
+	// sand stone, ofcource, yes sure, fuck you
+	pipeline.AddPathContainsHandler("sandstone_normal", rename("sandstone_normal", "sandstone"))
+	pipeline.AddPathContainsHandler("sandstone_carved", rename("sandstone_carved", "chiseled_sandstone"))
+	pipeline.AddPathContainsHandler("sandstone_smooth", rename("sandstone_smooth", "cut_sandstone"))
+	pipeline.AddPathContainsHandler("sandstone_smooth", rename("sandstone_smooth", "cut_sandstone"))
+
+	// lets do that again but for red sand stone, the colour of fucking blood, ew epic gamer moment right there
+	pipeline.AddPathContainsHandler("red_sandstone_normal", rename("red_sandstone_normal", "red_sandstone"))
+	pipeline.AddPathContainsHandler("red_sandstone_carved", rename("red_sandstone_carved", "chiseled_red_sandstone"))
+	pipeline.AddPathContainsHandler("red_sandstone_smooth", rename("red_sandstone_smooth", "cut_red_sandstone"))
+	pipeline.AddPathContainsHandler("red_sandstone_smooth", rename("red_sandstone_smooth", "cut_red_sandstone"))
+
+	// dirt! as a epic in game reference to the human dirt that is Notch, because i'm getting sick of this format
 
 }
 
