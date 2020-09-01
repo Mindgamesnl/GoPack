@@ -14,6 +14,7 @@ func AddPipeline(pipeline *Pipeline) {
 func RunPipelines(pack ResourcePack) {
 	for i := range Pipelines {
 		pipe := Pipelines[i]
+		logrus.Info("Executing pipeline: " + pipe.Name)
 
 		tasks := len(pack.FileCollection.AllFiles)
 
@@ -39,8 +40,6 @@ func RunPipelines(pack ResourcePack) {
 
 				if !contains(pipe.ProcessedFileNames, file.UniqueName) {
 					handler(pack, file, pipe)
-				} else {
-					logrus.Info("Touched file " + file.UniqueName)
 				}
 			}
 

@@ -1,6 +1,8 @@
 package pipelines
 
 func RegisterPipelines()  {
-	Make112Pipeline()
+	Make111Pipeline()
 	Make113Pipeline()
+	Make115Pipeline()
+	Make116Pipeline()
 }
