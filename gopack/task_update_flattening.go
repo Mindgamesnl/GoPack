@@ -1,6 +1,8 @@
 package gopack
 
 import (
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 	"strconv"
 	"strings"
 )
@@ -33,6 +35,22 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 			// save file manually with its new name
 			pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
+		}
+	})
+
+	// rename texture references
+	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+		asString := resource.GetPipelineString(pipeline)
+
+		texture := gjson.Get(asString, "textures.texture")
+		particle := gjson.Get(asString, "textures.particle")
+
+		if texture.Exists() {
+			asString, _ = sjson.Set(asString, "textures.texture", strings.Replace(texture.String(), "blocks/", "block/", -1))
+		}
+
+		if particle.Exists() {
+			asString, _ = sjson.Set(asString, "textures.particle", strings.Replace(particle.String(), "blocks/", "block/", -1))
 		}
 	})
 
