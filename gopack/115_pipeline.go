@@ -1,7 +1,7 @@
 package gopack
 
 func Make115Pipeline() {
-	pipeline := CreatePipeline("to 1.15", "work/115/")
+	pipeline := CreatePipeline("to 1.15 (remove secrets, flattening)", "work/115/")
 
 	// apply updates from 1.12 to 1.15
 	ApplyFlatteningUpdate(pipeline)

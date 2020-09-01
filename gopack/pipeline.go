@@ -13,6 +13,7 @@ type Pipeline struct {
 	ProcessedFileNames        []string
 	OutFolder                 string
 	FileCache                 map[string][]byte
+	WriteQueue                map[string][]byte
 }
 
 // create a pipeline with a name (which will also be the output directory/pack and version)
@@ -24,6 +25,7 @@ func CreatePipeline(name string, out string) *Pipeline {
 		ProcessedFileNames:        []string{},
 		OutFolder:                 out,
 		FileCache:                 make(map[string][]byte),
+		WriteQueue:                make(map[string][]byte),
 	}
 }
 
@@ -80,16 +82,22 @@ func (p *Pipeline) SaveUntouched() {
 	})
 }
 
-func (p *Pipeline) SaveBytes(resource *Resource, content []byte) {
-	p.FileCache[resource.UniqueName] = content
+func (p *Pipeline) FlushFiles() {
+	for s := range p.WriteQueue {
+		writeBytes(s, p.WriteQueue[s])
+	}
+	p.WriteQueue = make(map[string][]byte)
+}
+
+func writeBytes(targetFolder string, content []byte) {
 
 	// create folder
-	fa := os.MkdirAll(filepath.Dir(p.OutFolder+resource.Path), os.ModePerm)
+	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
 	if fa != nil {
 		panic(fa)
 	}
 
-	f, err := os.Create(p.OutFolder + resource.Path)
+	f, err := os.Create(targetFolder)
 
 	if err != nil {
 		panic(err)
@@ -102,6 +110,11 @@ func (p *Pipeline) SaveBytes(resource *Resource, content []byte) {
 	if err2 != nil {
 		panic(err2)
 	}
+}
+
+func (p *Pipeline) SaveBytes(resource *Resource, content []byte) {
+	p.FileCache[resource.UniqueName] = content
+	p.WriteQueue[p.OutFolder + resource.Path] = content
 }
 
 func (p *Pipeline) SaveFile(resource *Resource, content string) {

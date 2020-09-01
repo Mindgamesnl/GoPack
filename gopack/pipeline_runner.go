@@ -16,15 +16,14 @@ func AddPipeline(pipeline *Pipeline) {
 func RunPipelines(originalPack ResourcePack) {
 	utils.ResetFileCache()
 	for i := range Pipelines {
-
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
 		pipe := Pipelines[i] // copy the pipeline
 
 		logrus.Info("Executing pipeline: " + pipe.Name)
 
-		tasks := len(pack.FileCollection.AllFiles)
+		tasks := (len(pipe.Handlers) + len(pipe.UntouchedResourceHandlers)) * len(pack.FileCollection.NameToPath)
 
-		bar := pb.StartNew(tasks)
+		bar := pb.Full.Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
 
 		// go over all files yo, very epic
@@ -35,6 +34,7 @@ func RunPipelines(originalPack ResourcePack) {
 			for pipeIncrementer := range pipe.Handlers {
 				handler := pipe.Handlers[pipeIncrementer]
 				handler(pack, file, pipe)
+				bar.Increment()
 			}
 
 			for pipeIncrementer := range pipe.UntouchedResourceHandlers {
@@ -43,14 +43,13 @@ func RunPipelines(originalPack ResourcePack) {
 				if !contains(pipe.ProcessedFileNames, file.UniqueName) {
 					handler(pack, file, pipe)
 				}
+				bar.Increment()
 			}
-
-			file.ContentAsString()
-
-			bar.Increment()
 		}
-
 		bar.Finish()
+		logrus.Info("Flushing files..")
+		pipe.FlushFiles()
+		logrus.Info("Saved!")
 	}
 	logrus.Info("Done lol")
 }

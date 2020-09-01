@@ -9,7 +9,7 @@ import (
 
 func RemoveComment() func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 	return func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.Path)
+		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.OsPath)
 
 		updatedJson := resource.GetPipelineString(pipeline)
 

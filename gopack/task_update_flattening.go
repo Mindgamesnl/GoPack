@@ -2,11 +2,27 @@ package gopack
 
 import (
 	"github.com/Mindgamesnl/GoPack/gopack/utils"
+	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"strconv"
 	"strings"
 )
+
+var jsonCache = make(map[string]gjson.Result)
+
+func loadParsedJson(osPath string, resource *Resource, pipeline *Pipeline) gjson.Result {
+	result, found := jsonCache[osPath]
+
+	if found {
+		logrus.Info("from cache " + osPath)
+		return result
+	}
+
+	values := gjson.Parse(resource.GetPipelineString(pipeline))
+	jsonCache[osPath] = values
+	return values
+}
 
 func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// https://blockbench.net/2018/07/18/changes-to-resource-packs-in-minecraft-1-13/
@@ -42,24 +58,28 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// rename texture references
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// search json
-		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.Path)
+		parsed := loadParsedJson(resource.OsPath, resource, pipeline)
+		scan := utils.FindJsonKeys(parsed, resource.OsPath)
 
 		updatedJson := resource.GetPipelineString(pipeline)
+		updated := false
 
 		for i := range scan {
 			key := scan[i]
-			value := gjson.Get(updatedJson, key)
-
-			if !value.IsObject() && !value.IsArray() && value.Exists() {
+			if strings.Contains(key, "textures") {
+				value := parsed.Get(key)
 				// replace references to blocks/ and items/
 				asString := value.Str
 				asString = strings.Replace(asString, "textures/items/", "textures/item/", -1)
 				asString = strings.Replace(asString, "textures/blocks/", "textures/block/", -1)
 				updatedJson, _ = sjson.Set(updatedJson, key, asString)
+				updated = true
 			}
 		}
 
-		pipeline.SaveFile(resource, updatedJson)
+		if updated {
+			pipeline.SaveFile(resource, updatedJson)
+		}
 	})
 
 	colors := [...]string{
@@ -85,20 +105,20 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	for i := range colors {
 		color := colors[i]
 		// wool
-		pipeline.AddPathContainsHandler("wool_colored_" + color, rename("wool_colored_" + color, color + "_wool"))
+		pipeline.AddPathContainsHandler("wool_colored_"+color, rename("wool_colored_"+color, color+"_wool"))
 		// stained glass and pane
-		pipeline.AddPathContainsHandler("glass_" + color, rename("glass_" + color, color + "_stained_glass"))
-		pipeline.AddPathContainsHandler("glass_pane_top_" + color, rename("glass_pane_top_" + color, color + "_stained_glass_pane_top"))
+		pipeline.AddPathContainsHandler("glass_"+color, rename("glass_"+color, color+"_stained_glass"))
+		pipeline.AddPathContainsHandler("glass_pane_top_"+color, rename("glass_pane_top_"+color, color+"_stained_glass_pane_top"))
 		// terrecotta or whatever
-		pipeline.AddPathContainsHandler("hardened_clay_stained_" + color, rename("hardened_clay_stained_" + color, color + "_terracotta"))
+		pipeline.AddPathContainsHandler("hardened_clay_stained_"+color, rename("hardened_clay_stained_"+color, color+"_terracotta"))
 		// concrete powder! how fun, fuck
-		pipeline.AddPathContainsHandler("concrete_powder_" + color, rename("concrete_powder_" + color, color + "_concrete_powder"))
+		pipeline.AddPathContainsHandler("concrete_powder_"+color, rename("concrete_powder_"+color, color+"_concrete_powder"))
 		// and regular concrete, aren't we lucky today
-		pipeline.AddPathContainsHandler("concrete_" + color, rename("concrete_" + color, color + "_concrete"))
+		pipeline.AddPathContainsHandler("concrete_"+color, rename("concrete_"+color, color+"_concrete"))
 		// glazed terrecotta, the infinite joy
-		pipeline.AddPathContainsHandler("glazed_terracotta_" + color, rename("glazed_terracotta_" + color, color + "_glazed_terracotta"))
+		pipeline.AddPathContainsHandler("glazed_terracotta_"+color, rename("glazed_terracotta_"+color, color+"_glazed_terracotta"))
 		// shulkers aye, ffs
-		pipeline.AddPathContainsHandler("shulker_top_" + color, rename("shulker_top_" + color, color + "_shulker_box_top"))
+		pipeline.AddPathContainsHandler("shulker_top_"+color, rename("shulker_top_"+color, color+"_shulker_box_top"))
 	}
 
 	// more renaming, because mojang just loves that
@@ -172,7 +192,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		// just do for 10 stages, even though they only really go from 0 to 7
 		for i2 := 0; i2 < 10; i2++ {
 			num := strconv.FormatInt(int64(i2), 10)
-			pipeline.AddPathContainsHandler(crop + "_stage_" + num, rename(crop + "_stage_" + num, crop + "_stage" + num))
+			pipeline.AddPathContainsHandler(crop+"_stage_"+num, rename(crop+"_stage_"+num, crop+"_stage"+num))
 		}
 	}
 
@@ -192,19 +212,19 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	for i := range logs {
 		log := logs[i]
 
-		pipeline.AddPathContainsHandler("door_" + log, rename("door_" + log, log + "_door"))
-		pipeline.AddPathContainsHandler("planks_" + log, rename("planks_" + log, log + "_planks"))
-		pipeline.AddPathContainsHandler("door_" + log + "_lower", rename("log_" + log + "_lower", log + "_door_bottom"))
-		pipeline.AddPathContainsHandler("door_" + log + "_lower", rename("log_" + log + "_lower", log + "_door_bottom"))
-		pipeline.AddPathContainsHandler("door_" + log + "_upper", rename("log_" + log + "_upper", log + "_door_top"))
-		pipeline.AddPathContainsHandler("log_" + log, rename("log_" + log, log + "_log"))
-		pipeline.AddPathContainsHandler("sapling_" + log, rename("sapling_" + log, log + "_sapling"))
-		pipeline.AddPathContainsHandler("leaves_" + log, rename("leaves_" + log, log + "_leaves"))
-		pipeline.AddPathContainsHandler("trapdoor_" + log, rename("trapdoor_" + log, log + "_trapdoor"))
+		pipeline.AddPathContainsHandler("door_"+log, rename("door_"+log, log+"_door"))
+		pipeline.AddPathContainsHandler("planks_"+log, rename("planks_"+log, log+"_planks"))
+		pipeline.AddPathContainsHandler("door_"+log+"_lower", rename("log_"+log+"_lower", log+"_door_bottom"))
+		pipeline.AddPathContainsHandler("door_"+log+"_lower", rename("log_"+log+"_lower", log+"_door_bottom"))
+		pipeline.AddPathContainsHandler("door_"+log+"_upper", rename("log_"+log+"_upper", log+"_door_top"))
+		pipeline.AddPathContainsHandler("log_"+log, rename("log_"+log, log+"_log"))
+		pipeline.AddPathContainsHandler("sapling_"+log, rename("sapling_"+log, log+"_sapling"))
+		pipeline.AddPathContainsHandler("leaves_"+log, rename("leaves_"+log, log+"_leaves"))
+		pipeline.AddPathContainsHandler("trapdoor_"+log, rename("trapdoor_"+log, log+"_trapdoor"))
 	}
 
 	// only replace the original trapdoor, but don't break new ones
-	pipeline.AddPathContainsHandler("/trapdoor.", rename("/trapdoor." ,"oak_trapdoor"))
+	pipeline.AddPathContainsHandler("/trapdoor.", rename("/trapdoor.", "oak_trapdoor"))
 
 	// and now! back to boring conventions, thanks mojang for adding so many fucking flowers
 	pipeline.AddPathContainsHandler("tallgrass", rename("tallgrass", "grass"))
@@ -218,7 +238,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// let's just re use the fucking colors
 	for i := range colors {
 		color := colors[i]
-		pipeline.AddPathContainsHandler("flower_tulip_" + color, rename("flower_tulip_" + color, color + "_tulip"))
+		pipeline.AddPathContainsHandler("flower_tulip_"+color, rename("flower_tulip_"+color, color+"_tulip"))
 	}
 
 	// more double blocks, gotta love em
@@ -320,7 +340,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		material := materials[i]
 		for i2 := range types {
 			thing := types[i2]
-			pipeline.AddPathContainsHandler(material + "_" + thing, rename(material + "_" + thing, material + "en_" + thing))
+			pipeline.AddPathContainsHandler(material+"_"+thing, rename(material+"_"+thing, material+"en_"+thing))
 		}
 	}
 
@@ -451,6 +471,6 @@ func rename(from string, to string) func(originalPack ResourcePack, resource *Re
 		resource.Path = strings.Replace(resource.Path, from, to, 1)
 		resource.ReadableName = strings.Replace(resource.ReadableName, from, to, 1)
 		resource.UniqueName = strings.Replace(resource.UniqueName, from, to, 1)
-		pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
+		// pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
 	}
 }
