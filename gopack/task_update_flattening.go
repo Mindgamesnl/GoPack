@@ -276,7 +276,6 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 	// okay, so, thats all the blocks
 	// now onto the items.. yoink
-
 	materials := [...]string{
 		"wood",
 		"gold",
@@ -299,7 +298,43 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		}
 	}
 
+	// fooooooooooood
+	pipeline.AddPathContainsHandler("carrot_golden", rename("carrot_golden", "golden_carrot"))
+	pipeline.AddPathContainsHandler("porkchop_raw", rename("porkchop_raw", "porkchop"))
+	pipeline.AddPathContainsHandler("rabbit_raw", rename("rabbit_raw", "rabbit"))
+	pipeline.AddPathContainsHandler("beef_raw", rename("beef_raw", "beef"))
+	pipeline.AddPathContainsHandler("chicken_raw", rename("chicken_raw", "chicken"))
+	pipeline.AddPathContainsHandler("mutton_raw", rename("mutton_raw", "mutton"))
+	pipeline.AddPathContainsHandler("porkchop_cooked", rename("porkchop_cooked", "cooked_porkchop"))
+	pipeline.AddPathContainsHandler("rabbit_cooked", rename("rabbit_cooked", "cooked_rabbit"))
+	pipeline.AddPathContainsHandler("beef_cooked", rename("beef_cooked", "cooked_beef"))
+	pipeline.AddPathContainsHandler("chicken_cooked", rename("chicken_cooked", "cooked_chicken"))
+	pipeline.AddPathContainsHandler("mutton_cooked", rename("mutton_cooked", "cooked_mutton"))
+	pipeline.AddPathContainsHandler("potato_baked", rename("potato_baked", "baked_potato"))
+	pipeline.AddPathContainsHandler("potato_poisonous", rename("potato_poisonous", "poisonous_potato"))
+	pipeline.AddPathContainsHandler("fish_cod_raw", rename("fish_cod_raw", "cod"))
+	pipeline.AddPathContainsHandler("fish_cod_cooked", rename("fish_cod_cooked", "cooked_cod"))
+	pipeline.AddPathContainsHandler("fish_salmon_raw", rename("fish_salmon_raw", "salmon"))
+	pipeline.AddPathContainsHandler("fish_salmon_cooked", rename("fish_salmon_cooked", "cooked_salmon"))
+	pipeline.AddPathContainsHandler("fish_pufferfish_raw", rename("fish_pufferfish_raw", "pufferfish"))
+	pipeline.AddPathContainsHandler("fish_clownfish_raw", rename("fish_clownfish_raw", "clownfish"))
 
+	// other stufff
+	pipeline.AddPathContainsHandler("record_11", rename("record_11", "music_disc_11"))
+	pipeline.AddPathContainsHandler("record_13", rename("record_13", "music_disc_13"))
+	pipeline.AddPathContainsHandler("record_mall", rename("record_mall", "music_disc_mall"))
+	pipeline.AddPathContainsHandler("record_cat", rename("record_cat", "music_disc_cat"))
+	pipeline.AddPathContainsHandler("record_far", rename("record_far", "music_disc_far"))
+	pipeline.AddPathContainsHandler("record_chirp", rename("record_chirp", "music_disc_chirp"))
+	pipeline.AddPathContainsHandler("record_wait", rename("record_wait", "music_disc_wait"))
+	pipeline.AddPathContainsHandler("record_strad", rename("record_strad", "music_disc_strad"))
+	pipeline.AddPathContainsHandler("record_ward", rename("record_ward", "music_disc_ward"))
+	pipeline.AddPathContainsHandler("record_blocks", rename("record_blocks", "music_disc_blocks"))
+	pipeline.AddPathContainsHandler("record_mellohi", rename("record_mellohi", "music_disc_mellohi"))
+	pipeline.AddPathContainsHandler("record_stal", rename("record_stal", "music_disc_stal"))
+
+	// golden armor
+	
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
