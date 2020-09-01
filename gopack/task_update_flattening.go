@@ -264,6 +264,14 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("dropper_front_horizontal", rename("dropper_front_horizontal", "dropper_front"))
 	pipeline.AddPathContainsHandler("dispenser_front_horizontal", rename("dispenser_front_horizontal", "dispenser_front"))
 	pipeline.AddPathContainsHandler("furnace_front_off", rename("furnace_front_off", "furnace_front"))
+	pipeline.AddPathContainsHandler("redstone_lamp_off", rename("redstone_lamp_off", "redstone_lamp"))
+	pipeline.AddPathContainsHandler("/brick.", rename("brick", "bricks"))
+	pipeline.AddPathContainsHandler("nether_brick", rename("nether_brick", "nether_bricks"))
+	pipeline.AddPathContainsHandler("trip_wire", rename("trip_wire", "tripwire"))
+	pipeline.AddPathContainsHandler("portal", rename("portal", "nether_portal"))
+	pipeline.AddPathContainsHandler("quartz_ore", rename("quartz_ore", "nether_quartz_ore"))
+	pipeline.AddPathContainsHandler("itemframe_background", rename("itemframe_background", "item_frame"))
+	pipeline.AddPathContainsHandler("mob_spawner", rename("mob_spawner", "spawner"))
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
