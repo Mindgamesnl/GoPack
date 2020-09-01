@@ -148,6 +148,35 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 			pipeline.AddPathContainsHandler(crop + "_stage_" + num, rename(crop + "_stage_" + num, crop + "_stage" + num))
 		}
 	}
+
+	// logs, again, cheating repetition here
+	logs := [...]string{
+		"wood",
+		"oak",
+		"birch",
+		"spruce",
+		"jungle",
+		"acacia",
+		"big_oak",
+		"dark_oak",
+		"iron", // IRON IS WOOD? no, but it is a dor, just like i am lazy
+	}
+
+	for i := range logs {
+		log := logs[i]
+
+		pipeline.AddPathContainsHandler("log_" + log + "_top", rename("log_" + log + "_top", log + "_log_top"))
+		pipeline.AddPathContainsHandler("planks_" + log, rename("planks_" + log, log + "_planks"))
+		pipeline.AddPathContainsHandler("door_" + log + "_lower", rename("log_" + log + "_lower", log + "_door_bottom"))
+		pipeline.AddPathContainsHandler("door_" + log + "_upper", rename("log_" + log + "_upper", log + "_door_top"))
+		pipeline.AddPathContainsHandler("log_" + log, rename("log_" + log, log + "_log"))
+		pipeline.AddPathContainsHandler("sapling_" + log, rename("sapling_" + log, log + "_sapling"))
+		pipeline.AddPathContainsHandler("leaves_" + log, rename("leaves_" + log, log + "_leaves"))
+		pipeline.AddPathContainsHandler("trapdoor_" + log, rename("trapdoor_" + log, log + "_trapdoor"))
+	}
+
+	// only replace the original trapdoor, but don't break new ones
+	pipeline.AddPathContainsHandler("/trapdoor.", rename("/trapdoor." ,"oak_trapdoor"))
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
