@@ -465,23 +465,26 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 				parentParts := strings.Split(parent, ".")
 				parent = strings.Replace(parent, "." + parentParts[len(parentParts)-1], "", -1)
 
-				oldValues := gjson.Get(updatedJson, parent).Map()
-				oldStringValues := make(map[string]string)
+				topLevel := parentParts[len(parentParts) - 1]
 
-				for s := range oldValues {
-					oldStringValues[strings.Replace(s, parent, "", -1)] = oldValues[s].Str
+				updatedMap := make(map[string]string)
+				props := gjson.Get(updatedJson, parent).Map()
+
+				for s := range props {
+					v := props[s].Str
+					if v != "" {
+						updatedMap[s] = v
+					}
 				}
 
-				oldStringValues[key] = asString
+				updatedMap[topLevel] = asString
 
-				for s := range oldStringValues {
-					var err error
-					updatedJson, err = sjson.Set(updatedJson, parent, oldStringValues)
-					if err != nil {
-						logrus.Info("item ", resource.GetPipelineString(pipeline))
-						logrus.Info("key " + s)
-						panic(err)
-					}
+				var err error
+				updatedJson, err = sjson.Set(updatedJson, parent, updatedMap)
+				if err != nil {
+					logrus.Info("item ", resource.GetPipelineString(pipeline))
+					logrus.Info("key " + key)
+					panic(err)
 				}
 				updated = true
 			}
