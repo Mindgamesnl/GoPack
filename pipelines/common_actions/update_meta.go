@@ -9,7 +9,7 @@ import (
 func SetMetaRevision(version int) func(originalPack loader.ResourcePack, resource loader.Resource, pipeline *loader.Pipeline) {
 	return func(originalPack loader.ResourcePack, resource loader.Resource, pipeline *loader.Pipeline) {
 		meta := &packs.PackMcMeta{}
-		utils.JsonToStruct(resource.ContentAsString(), meta)
+		utils.JsonToStruct(resource.GetPipelineString(pipeline), meta)
 		meta.Pack.PackFormat = version
 
 		newContent := utils.StructToJson(meta)

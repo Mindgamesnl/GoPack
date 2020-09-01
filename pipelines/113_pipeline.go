@@ -10,6 +10,8 @@ func Make113Pipeline() {
 
 	// update format
 	pipeline.AddForFileName("pack.mcmeta", common_actions.SetMetaRevision(4))
+	// remove comments
+	pipeline.AddForFileType("json", common_actions.RemoveComment())
 
 	pipeline.SaveUntouched()
 	loader.AddPipeline(&pipeline)

@@ -12,6 +12,7 @@ type Pipeline struct {
 	UntouchedResourceHandlers []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)
 	ProcessedFileNames        []string
 	OutFolder                 string
+	FileCache                 map[string][]byte
 }
 
 // create a pipeline with a name (which will also be the output directory/pack and version)
@@ -22,6 +23,7 @@ func CreatePipeline(name string, out string) Pipeline {
 		Handlers:                  []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline){},
 		ProcessedFileNames:        []string{},
 		OutFolder:                 out,
+		FileCache:                 make(map[string][]byte),
 	}
 }
 
@@ -68,7 +70,9 @@ func (p *Pipeline) SaveUntouched() {
 	})
 }
 
-func (p Pipeline) SaveBytes(resource Resource, content []byte) {
+func (p *Pipeline) SaveBytes(resource Resource, content []byte) {
+	p.FileCache[resource.UniqueName] = content
+
 	// create folder
 	fa := os.MkdirAll(filepath.Dir(p.OutFolder+resource.Path), os.ModePerm)
 	if fa != nil {
@@ -90,7 +94,6 @@ func (p Pipeline) SaveBytes(resource Resource, content []byte) {
 	}
 }
 
-
-func (p Pipeline) SaveFile(resource Resource, content string) {
+func (p *Pipeline) SaveFile(resource Resource, content string) {
 	p.SaveBytes(resource, []byte(content))
 }
