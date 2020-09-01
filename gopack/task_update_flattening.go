@@ -1,6 +1,7 @@
 package gopack
 
 import (
+	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"strconv"
@@ -40,18 +41,25 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 	// rename texture references
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-		asString := resource.GetPipelineString(pipeline)
+		// search json
+		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), "")
 
-		texture := gjson.Get(asString, "textures.texture")
-		particle := gjson.Get(asString, "textures.particle")
+		updatedJson := resource.GetPipelineString(pipeline)
 
-		if texture.Exists() {
-			asString, _ = sjson.Set(asString, "textures.texture", strings.Replace(texture.String(), "blocks/", "block/", -1))
+		for i := range scan {
+			key := scan[i]
+			value := gjson.Get(updatedJson, key)
+
+			if !value.IsObject() && !value.IsArray() && value.Exists() {
+				// replace references to blocks/ and items/
+				asString := value.Str
+				asString = strings.Replace(asString, "items/", "item/", -1)
+				asString = strings.Replace(asString, "blocks/", "block/", -1)
+				updatedJson, _ = sjson.Set(updatedJson, key, asString)
+			}
 		}
 
-		if particle.Exists() {
-			asString, _ = sjson.Set(asString, "textures.particle", strings.Replace(particle.String(), "blocks/", "block/", -1))
-		}
+		pipeline.SaveFile(resource, updatedJson)
 	})
 
 	colors := [...]string{
