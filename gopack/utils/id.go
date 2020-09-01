@@ -1,4 +1,4 @@
-package gopack
+package utils
 
 import (
 	"math/rand"
