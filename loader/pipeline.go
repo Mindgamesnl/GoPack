@@ -60,6 +60,14 @@ func (p *Pipeline) UnhandledFileHandler(handler func(originalPack ResourcePack, 
 	})
 }
 
+// Save all untouched files
+func (p *Pipeline) SaveUntouched() {
+	p.UnhandledFileHandler(func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+		// remove comments
+		pipeline.SaveBytes(resource, resource.ContentAsBytes())
+	})
+}
+
 func (p Pipeline) SaveBytes(resource Resource, content []byte) {
 	// create folder
 	fa := os.MkdirAll(filepath.Dir(p.OutFolder+resource.Path), os.ModePerm)

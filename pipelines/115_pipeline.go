@@ -11,10 +11,6 @@ func Make115Pipeline() {
 	// update format
 	pipeline.AddForFileName("pack.mcmeta", common_actions.SetMetaRevision(5))
 
-	pipeline.UnhandledFileHandler(func(originalPack loader.ResourcePack, resource loader.Resource, pipeline *loader.Pipeline) {
-		// remove comments
-		pipeline.SaveBytes(resource, resource.ContentAsBytes())
-	})
-
+	pipeline.SaveUntouched()
 	loader.AddPipeline(&pipeline)
 }
