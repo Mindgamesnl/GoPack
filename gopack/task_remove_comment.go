@@ -17,7 +17,7 @@ func RemoveComment() func(originalPack ResourcePack, resource *Resource, pipelin
 			key := scan[i]
 			if strings.Contains(key, "__comment") {
 				var err error
-				updatedJson, err = sjson.Delete(resource.GetPipelineString(pipeline), key)
+				updatedJson, err = sjson.Delete(updatedJson, key)
 				if err != nil {
 					panic(err)
 				}

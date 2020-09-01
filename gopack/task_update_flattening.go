@@ -2,7 +2,6 @@ package gopack
 
 import (
 	"github.com/Mindgamesnl/GoPack/gopack/utils"
-	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"strconv"
@@ -15,7 +14,6 @@ func loadParsedJson(osPath string, resource *Resource, pipeline *Pipeline) gjson
 	result, found := jsonCache[osPath]
 
 	if found {
-		logrus.Info("from cache " + osPath)
 		return result
 	}
 
@@ -70,8 +68,8 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 				value := parsed.Get(key)
 				// replace references to blocks/ and items/
 				asString := value.Str
-				asString = strings.Replace(asString, "textures/items/", "textures/item/", -1)
-				asString = strings.Replace(asString, "textures/blocks/", "textures/block/", -1)
+				asString = strings.Replace(asString, "items/", "item/", -1)
+				asString = strings.Replace(asString, "blocks/", "block/", -1)
 				updatedJson, _ = sjson.Set(updatedJson, key, asString)
 				updated = true
 			}
@@ -460,6 +458,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("llama_white", rename("llama_white", "white"))
 
 	// WHOOOO THATS ITTT
+	pipeline.SaveUntouched()
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
@@ -471,6 +470,6 @@ func rename(from string, to string) func(originalPack ResourcePack, resource *Re
 		resource.Path = strings.Replace(resource.Path, from, to, 1)
 		resource.ReadableName = strings.Replace(resource.ReadableName, from, to, 1)
 		resource.UniqueName = strings.Replace(resource.UniqueName, from, to, 1)
-		// pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
+		pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
 	}
 }
