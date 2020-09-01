@@ -11,9 +11,12 @@ func AddPipeline(pipeline *Pipeline) {
 	Pipelines = append(Pipelines, pipeline)
 }
 
-func RunPipelines(pack ResourcePack) {
+func RunPipelines(originalPack ResourcePack) {
 	for i := range Pipelines {
-		pipe := Pipelines[i]
+
+		pack := originalPack // copy the pack for every pipeline, to prevent destruction
+		pipe := Pipelines[i] // copy the pipeline
+
 		logrus.Info("Executing pipeline: " + pipe.Name)
 
 		tasks := len(pack.FileCollection.AllFiles)
@@ -22,7 +25,8 @@ func RunPipelines(pack ResourcePack) {
 
 		// go over all files yo, very epic
 		for s := range pack.FileCollection.NameToPath {
-			file := pack.FileCollection.NameToPath[s]
+			originalFile := pack.FileCollection.NameToPath[s]
+			file := &originalFile
 			// logrus.Info(len(pipe.Handlers))
 			// go over all handlers
 			for pipeIncrementer := range pipe.Handlers {

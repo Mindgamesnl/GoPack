@@ -8,8 +8,8 @@ import (
 
 type Pipeline struct {
 	Name                      string
-	Handlers                  []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)
-	UntouchedResourceHandlers []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)
+	Handlers                  []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)
+	UntouchedResourceHandlers []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)
 	ProcessedFileNames        []string
 	OutFolder                 string
 	FileCache                 map[string][]byte
@@ -19,8 +19,8 @@ type Pipeline struct {
 func CreatePipeline(name string, out string) Pipeline {
 	return Pipeline{
 		Name:                      name,
-		UntouchedResourceHandlers: []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline){},
-		Handlers:                  []func(originalPack ResourcePack, resource Resource, pipeline *Pipeline){},
+		UntouchedResourceHandlers: []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline){},
+		Handlers:                  []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline){},
 		ProcessedFileNames:        []string{},
 		OutFolder:                 out,
 		FileCache:                 make(map[string][]byte),
@@ -28,16 +28,16 @@ func CreatePipeline(name string, out string) Pipeline {
 }
 
 // add a handler for every file, THIS DOES **NOT** COUNT AS A SPECIFIC RESOURCE HANDLING!
-func (p *Pipeline) AddGlobalHandler(handler func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)) {
-	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+func (p *Pipeline) AddGlobalHandler(handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
+	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		handler(originalPack, resource, pipeline)
 	})
 }
 
 // add a handler for all png files or something, so the filetype argument would be "png" with or without the dot
-func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)) {
+func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
 	filetype = strings.Replace(filetype, ".", "", -1)
-	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		if strings.Contains(resource.ReadableName, "."+filetype) {
 			handler(originalPack, resource, pipeline)
 			p.ProcessedFileNames = append(p.ProcessedFileNames, resource.UniqueName)
@@ -46,8 +46,8 @@ func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack Res
 }
 
 // add a handler for files with a specific name
-func (p *Pipeline) AddForFileName(fileName string, handler func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)) {
-	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+func (p *Pipeline) AddForFileName(fileName string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
+	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		if resource.ReadableName == fileName {
 			handler(originalPack, resource, pipeline)
 			p.ProcessedFileNames = append(p.ProcessedFileNames, resource.UniqueName)
@@ -56,21 +56,21 @@ func (p *Pipeline) AddForFileName(fileName string, handler func(originalPack Res
 }
 
 // A handler for all files that haven't been touched yet
-func (p *Pipeline) UnhandledFileHandler(handler func(originalPack ResourcePack, resource Resource, pipeline *Pipeline)) {
-	p.UntouchedResourceHandlers = append(p.Handlers, func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+func (p *Pipeline) UnhandledFileHandler(handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
+	p.UntouchedResourceHandlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		handler(originalPack, resource, pipeline)
 	})
 }
 
 // Save all untouched files
 func (p *Pipeline) SaveUntouched() {
-	p.UnhandledFileHandler(func(originalPack ResourcePack, resource Resource, pipeline *Pipeline) {
+	p.UnhandledFileHandler(func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// remove comments
 		pipeline.SaveBytes(resource, resource.ContentAsBytes())
 	})
 }
 
-func (p *Pipeline) SaveBytes(resource Resource, content []byte) {
+func (p *Pipeline) SaveBytes(resource *Resource, content []byte) {
 	p.FileCache[resource.UniqueName] = content
 
 	// create folder
@@ -94,6 +94,6 @@ func (p *Pipeline) SaveBytes(resource Resource, content []byte) {
 	}
 }
 
-func (p *Pipeline) SaveFile(resource Resource, content string) {
+func (p *Pipeline) SaveFile(resource *Resource, content string) {
 	p.SaveBytes(resource, []byte(content))
 }
