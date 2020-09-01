@@ -177,6 +177,58 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 	// only replace the original trapdoor, but don't break new ones
 	pipeline.AddPathContainsHandler("/trapdoor.", rename("/trapdoor." ,"oak_trapdoor"))
+
+	// and now! back to boring conventions, thanks mojang for adding so many fucking flowers
+	pipeline.AddPathContainsHandler("tallgrass", rename("tallgrass", "grass"))
+	pipeline.AddPathContainsHandler("deadbush", rename("deadbush", "dead_bush"))
+	pipeline.AddPathContainsHandler("flower_allium", rename("flower_allium", "allium"))
+	pipeline.AddPathContainsHandler("flower_blue_orchid", rename("flower_blue_orchid", "blue_orchid"))
+	pipeline.AddPathContainsHandler("flower_dandelion", rename("flower_dandelion", "dandelion"))
+	pipeline.AddPathContainsHandler("flower_houstonia", rename("flower_houstonia", "azure_bluet"))
+	pipeline.AddPathContainsHandler("flower_rose", rename("flower_rose", "poppy"))
+
+	// let's just re use the fucking colors
+	for i := range colors {
+		color := colors[i]
+		pipeline.AddPathContainsHandler("flower_tulip_" + color, rename("flower_tulip_" + color, color + "_tulip"))
+	}
+
+	// more double blocks, gotta love em
+	pipeline.AddPathContainsHandler("double_plant_paeonia_bottom", rename("double_plant_paeonia_bottom", "peony_bottom"))
+	pipeline.AddPathContainsHandler("double_plant_paeonia_top", rename("double_plant_paeonia_top", "peony_top"))
+	pipeline.AddPathContainsHandler("double_plant_rose_bottom", rename("double_plant_rose_bottom", "rose_bush_bottom"))
+	pipeline.AddPathContainsHandler("double_plant_rose_top", rename("double_plant_rose_top", "rose_bush_top"))
+
+	// cute little sun flowers! i hope they burn
+	pipeline.AddPathContainsHandler("double_plant_sunflower_bottom", rename("double_plant_sunflower_bottom", "sunflower_bottom"))
+	pipeline.AddPathContainsHandler("double_plant_sunflower_top", rename("double_plant_sunflower_top", "sunflower_top"))
+	pipeline.AddPathContainsHandler("double_plant_sunflower_back", rename("double_plant_sunflower_back", "sunflower_back"))
+	pipeline.AddPathContainsHandler("double_plant_sunflower_front", rename("double_plant_sunflower_front", "sunflower_front"))
+
+	// more double plants, because i was just wondering where my depression went
+	pipeline.AddPathContainsHandler("double_plant_syringa_bottom", rename("double_plant_syringa_bottom", "lilac_bottom"))
+	pipeline.AddPathContainsHandler("double_plant_syringa_top", rename("double_plant_syringa_top", "lilac_top"))
+	pipeline.AddPathContainsHandler("double_plant_fern_top", rename("double_plant_fern_top", "large_fern_top"))
+	pipeline.AddPathContainsHandler("double_plant_fern_bottom", rename("double_plant_fern_bottom", "large_fern_bottom"))
+	pipeline.AddPathContainsHandler("double_plant_grass_top", rename("double_plant_grass_top", "tall_grass_top"))
+	pipeline.AddPathContainsHandler("double_plant_grass_bottom", rename("double_plant_grass_bottom", "tall_grass_bottom"))
+
+	// shrooms
+	pipeline.AddPathContainsHandler("mushroom_block_skin_stem", rename("mushroom_block_skin_stem", "mushroom_stem"))
+	pipeline.AddPathContainsHandler("mushroom_block_skin_brown", rename("mushroom_block_skin_brown", "brown_mushroom_block"))
+	pipeline.AddPathContainsHandler("mushroom_block_skin_red", rename("mushroom_block_skin_red", "red_mushroom_block"))
+	pipeline.AddPathContainsHandler("mushroom_red", rename("mushroom_red", "red_mushroom"))
+	pipeline.AddPathContainsHandler("mushroom_brown", rename("mushroom_brown", "brown_mushroom"))
+
+	// rails, yoink
+	pipeline.AddPathContainsHandler("rail_normal_turned", rename("rail_normal_turned", "rail_corner"))
+	pipeline.AddPathContainsHandler("rail_activator_powered", rename("rail_activator_powered", "activator_rail_on"))
+	pipeline.AddPathContainsHandler("rail_activator", rename("rail_activator", "activator_rail"))
+	pipeline.AddPathContainsHandler("rail_detector_powered", rename("rail_detector_powered", "detector_rail_on"))
+	pipeline.AddPathContainsHandler("rail_detector", rename("rail_detector", "detector_rail"))
+	pipeline.AddPathContainsHandler("rail_golden_powered", rename("rail_golden_powered", "powered_rail_on"))
+	pipeline.AddPathContainsHandler("rail_golden", rename("rail_golden", "powered_rail"))
+	pipeline.AddPathContainsHandler("rail_normal", rename("rail_normal", "rail"))
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
