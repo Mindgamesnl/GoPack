@@ -27,3 +27,9 @@ INFO[0193] Executing pipeline: to 1.16 (remove secrets, flattening)
 INFO[0254] Flushing files..
 INFO[0254] Saved!
 ``` 
+
+# TODO:
+- Subedive particle textures
+- Use aggressive PNG compression
+- Obfuscate file maps
+- Implement a bedrock pipeline

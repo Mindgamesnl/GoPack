@@ -9,6 +9,7 @@ import (
 )
 
 var jsonCache = make(map[string]gjson.Result)
+var textureNameMap = make(map[string]string)
 
 func loadParsedJson(osPath string, resource *Resource, pipeline *Pipeline) gjson.Result {
 	result, found := jsonCache[osPath]
@@ -50,33 +51,6 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 			// save file manually with its new name
 			pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
-		}
-	})
-
-	// rename texture references
-	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-		// search json
-		parsed := loadParsedJson(resource.OsPath, resource, pipeline)
-		scan := utils.FindJsonKeys(parsed, resource.OsPath)
-
-		updatedJson := resource.GetPipelineString(pipeline)
-		updated := false
-
-		for i := range scan {
-			key := scan[i]
-			if strings.Contains(key, "textures") {
-				value := parsed.Get(key)
-				// replace references to blocks/ and items/
-				asString := value.Str
-				asString = strings.Replace(asString, "items/", "item/", -1)
-				asString = strings.Replace(asString, "blocks/", "block/", -1)
-				updatedJson, _ = sjson.Set(updatedJson, key, asString)
-				updated = true
-			}
-		}
-
-		if updated {
-			pipeline.SaveFile(resource, updatedJson)
 		}
 	})
 
@@ -457,11 +431,46 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("llama_gray", rename("llama_gray", "gray"))
 	pipeline.AddPathContainsHandler("llama_white", rename("llama_white", "white"))
 
+	// rename texture references in json
+	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+		// search json
+		parsed := loadParsedJson(resource.OsPath, resource, pipeline)
+		scan := utils.FindJsonKeys(parsed, resource.OsPath)
+
+		updatedJson := resource.GetPipelineString(pipeline)
+		updated := false
+
+		for i := range scan {
+			key := scan[i]
+			if strings.Contains(key, "textures") {
+				value := parsed.Get(key)
+				// replace references to blocks/ and items/
+				asString := value.Str
+
+				asString = strings.Replace(asString, "items/", "item/", -1)
+				asString = strings.Replace(asString, "blocks/", "block/", -1)
+
+				for s := range textureNameMap {
+					asString = strings.Replace(asString, s, textureNameMap[s], -1)
+				}
+
+				updatedJson, _ = sjson.Set(updatedJson, key, asString)
+				updated = true
+			}
+		}
+
+		if updated {
+			pipeline.SaveFile(resource, updatedJson)
+		}
+	})
+
 	// WHOOOO THATS ITTT
 	pipeline.SaveUntouched()
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+	textureNameMap[from] = to
+
 	return func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// set and apply new name
 		if !strings.Contains(resource.Path, "textures/") {
