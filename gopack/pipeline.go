@@ -45,6 +45,16 @@ func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack Res
 	})
 }
 
+// add a handler for files with a regex
+func (p *Pipeline) AddPathContainsHandler(regex string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
+	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+		if strings.Contains(resource.OsPath, regex) {
+			handler(originalPack, resource, pipeline)
+			p.ProcessedFileNames = append(p.ProcessedFileNames, resource.UniqueName)
+		}
+	})
+}
+
 // add a handler for files with a specific name
 func (p *Pipeline) AddForFileName(fileName string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
 	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
