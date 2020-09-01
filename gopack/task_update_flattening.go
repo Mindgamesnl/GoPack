@@ -143,6 +143,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// lel
 	for i := range crops {
 		crop := crops[i]
+		// just do for 10 stages, even though they only really go from 0 to 7
 		for i2 := 0; i2 < 10; i2++ {
 			num := strconv.FormatInt(int64(i2), 10)
 			pipeline.AddPathContainsHandler(crop + "_stage_" + num, rename(crop + "_stage_" + num, crop + "_stage" + num))
@@ -229,6 +230,40 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("rail_golden_powered", rename("rail_golden_powered", "powered_rail_on"))
 	pipeline.AddPathContainsHandler("rail_golden", rename("rail_golden", "powered_rail"))
 	pipeline.AddPathContainsHandler("rail_normal", rename("rail_normal", "rail"))
+
+	// block states, fun, aye
+	pipeline.AddPathContainsHandler("fire_layer_0", rename("fire_layer_0", "fire_0"))
+	pipeline.AddPathContainsHandler("fire_layer_1", rename("fire_layer_1", "fire_1"))
+	pipeline.AddPathContainsHandler("noteblock", rename("noteblock", "note_block"))
+	pipeline.AddPathContainsHandler("slime.", rename("slime.", "slime_block"))
+	pipeline.AddPathContainsHandler("trip_wire_hook", rename("trip_wire_hook", "tripwire_hook"))
+	pipeline.AddPathContainsHandler("waterlily", rename("waterlily", "lily_pad"))
+	pipeline.AddPathContainsHandler("ice_packed", rename("ice_packed", "packed_ice"))
+	pipeline.AddPathContainsHandler("prismarine_dark", rename("prismarine_dark", "dark_prismarine"))
+	pipeline.AddPathContainsHandler("prismarine_rough", rename("prismarine_rough", "prismarine"))
+	pipeline.AddPathContainsHandler("trip_wire_source", rename("trip_wire_source", "trip_wire_hook"))
+	pipeline.AddPathContainsHandler("hardened_clay", rename("hardened_clay", "terracotta"))
+	pipeline.AddPathContainsHandler("sponge_wet", rename("sponge_wet", "wet_sponge"))
+	pipeline.AddPathContainsHandler("anvil_top_damaged_2", rename("anvil_top_damaged_2", "damaged_anvil_top"))
+	pipeline.AddPathContainsHandler("anvil_top_damaged_1", rename("anvil_top_damaged_1", "chipped_anvil_top"))
+	pipeline.AddPathContainsHandler("anvil_top_damaged_0", rename("anvil_top_damaged_0", "anvil_top"))
+	pipeline.AddPathContainsHandler("anvil_base", rename("anvil_base", "anvil"))
+	pipeline.AddPathContainsHandler("piston_top_normal", rename("piston_top_normal", "piston_top"))
+	pipeline.AddPathContainsHandler("endframe_top", rename("endframe_top", "end_portal_frame_top"))
+	pipeline.AddPathContainsHandler("endframe_side", rename("endframe_side", "end_portal_frame_side"))
+	pipeline.AddPathContainsHandler("endframe_eye", rename("endframe_eye", "end_portal_frame_eye"))
+	pipeline.AddPathContainsHandler("end_bricks", rename("end_bricks", "end_stone_bricks"))
+	pipeline.AddPathContainsHandler("pumpkin_face_off", rename("pumpkin_face_off", "carved_pumpkin"))
+	pipeline.AddPathContainsHandler("pumpkin_face_on", rename("pumpkin_face_on", "jack_o_lantern"))
+	pipeline.AddPathContainsHandler("web.", rename("web.", "cobweb"))
+	pipeline.AddPathContainsHandler("comparator_off", rename("comparator_off", "comparator"))
+	pipeline.AddPathContainsHandler("repeater_off", rename("repeater_off", "repeater"))
+	pipeline.AddPathContainsHandler("redstone_torch_on", rename("redstone_torch_on", "redstone_torch"))
+	pipeline.AddPathContainsHandler("torch_on", rename("torch_on", "torch"))
+	pipeline.AddPathContainsHandler("observer_back_lit", rename("observer_back_lit", "observer_back_on"))
+	pipeline.AddPathContainsHandler("dropper_front_horizontal", rename("dropper_front_horizontal", "dropper_front"))
+	pipeline.AddPathContainsHandler("dispenser_front_horizontal", rename("dispenser_front_horizontal", "dispenser_front"))
+	pipeline.AddPathContainsHandler("furnace_front_off", rename("furnace_front_off", "furnace_front"))
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
