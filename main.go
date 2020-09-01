@@ -1,7 +1,13 @@
 package main
 
-import "github.com/Mindgamesnl/GoPack/loader"
+import (
+	"github.com/Mindgamesnl/GoPack/loader"
+	"github.com/sirupsen/logrus"
+)
 
 func main() {
-	loader.FromZip("pack.zip")
+	originalPack := loader.FromZip("pack.zip")
+	logrus.Info(originalPack)
+
+
 }

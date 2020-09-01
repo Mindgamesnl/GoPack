@@ -22,7 +22,7 @@ func FromZip(filename string) ResourcePack {
 	collection := FileCollection{
 		Root: root,
 		AllFiles: files,
-		NameToPath: make(map[string]string),
+		NameToPath: make(map[string]Resource),
 	}
 
 	for i := range files {
@@ -30,7 +30,16 @@ func FromZip(filename string) ResourcePack {
 
 		elements := strings.Split(path, "/")
 		name := elements[len(elements) - 1]
-		collection.NameToPath[name] = path
+
+		// duplicate file names can occur within a pack, so we should handle it
+		resource := Resource{
+			name,
+			name + "@" + utils.RandomString(5),
+			path,
+			root + path,
+		}
+
+		collection.NameToPath[resource.UniqueName] = resource
 	}
 
 	mcData := packs.PackMcMeta{}
