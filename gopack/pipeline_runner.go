@@ -27,13 +27,7 @@ func RunPipelines(originalPack ResourcePack) {
 		for s := range pack.FileCollection.NameToPath {
 			originalFile := pack.FileCollection.NameToPath[s]
 			file := &originalFile
-			// logrus.Info(len(pipe.Handlers))
 			// go over all handlers
-			for pipeIncrementer := range pipe.Handlers {
-				handler := pipe.Handlers[pipeIncrementer]
-				handler(pack, file, pipe)
-			}
-
 			for pipeIncrementer := range pipe.Handlers {
 				handler := pipe.Handlers[pipeIncrementer]
 				handler(pack, file, pipe)

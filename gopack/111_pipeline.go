@@ -9,5 +9,5 @@ func Make111Pipeline() {
 	pipeline.AddForFileType("json", RemoveComment())
 
 	pipeline.SaveUntouched()
-	AddPipeline(&pipeline)
+	AddPipeline(pipeline)
 }

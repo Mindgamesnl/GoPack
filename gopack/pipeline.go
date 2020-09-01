@@ -16,8 +16,8 @@ type Pipeline struct {
 }
 
 // create a pipeline with a name (which will also be the output directory/pack and version)
-func CreatePipeline(name string, out string) Pipeline {
-	return Pipeline{
+func CreatePipeline(name string, out string) *Pipeline {
+	return &Pipeline{
 		Name:                      name,
 		UntouchedResourceHandlers: []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline){},
 		Handlers:                  []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline){},
