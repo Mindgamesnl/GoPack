@@ -166,8 +166,9 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	for i := range logs {
 		log := logs[i]
 
-		pipeline.AddPathContainsHandler("log_" + log + "_top", rename("log_" + log + "_top", log + "_log_top"))
+		pipeline.AddPathContainsHandler("door_" + log, rename("door_" + log, log + "_door"))
 		pipeline.AddPathContainsHandler("planks_" + log, rename("planks_" + log, log + "_planks"))
+		pipeline.AddPathContainsHandler("door_" + log + "_lower", rename("log_" + log + "_lower", log + "_door_bottom"))
 		pipeline.AddPathContainsHandler("door_" + log + "_lower", rename("log_" + log + "_lower", log + "_door_bottom"))
 		pipeline.AddPathContainsHandler("door_" + log + "_upper", rename("log_" + log + "_upper", log + "_door_top"))
 		pipeline.AddPathContainsHandler("log_" + log, rename("log_" + log, log + "_log"))
@@ -272,6 +273,33 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("quartz_ore", rename("quartz_ore", "nether_quartz_ore"))
 	pipeline.AddPathContainsHandler("itemframe_background", rename("itemframe_background", "item_frame"))
 	pipeline.AddPathContainsHandler("mob_spawner", rename("mob_spawner", "spawner"))
+
+	// okay, so, thats all the blocks
+	// now onto the items.. yoink
+
+	materials := [...]string{
+		"wood",
+		"gold",
+	}
+
+	types := [...]string{
+		"pickaxe",
+		"sword",
+		"shovel",
+		"hoe",
+		"axe",
+	}
+
+	// bit faster to do all the things and types
+	for i := range materials {
+		material := materials[i]
+		for i2 := range types {
+			thing := types[i2]
+			pipeline.AddPathContainsHandler(material + "_" + thing, rename(material + "_" + thing, material + "en_" + thing))
+		}
+	}
+
+
 }
 
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
