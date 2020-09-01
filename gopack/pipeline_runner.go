@@ -1,8 +1,10 @@
 package gopack
 
 import (
+	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 var Pipelines []*Pipeline
@@ -12,6 +14,7 @@ func AddPipeline(pipeline *Pipeline) {
 }
 
 func RunPipelines(originalPack ResourcePack) {
+	utils.ResetFileCache()
 	for i := range Pipelines {
 
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
@@ -22,6 +25,7 @@ func RunPipelines(originalPack ResourcePack) {
 		tasks := len(pack.FileCollection.AllFiles)
 
 		bar := pb.StartNew(tasks)
+		bar.SetRefreshRate(time.Millisecond * 10)
 
 		// go over all files yo, very epic
 		for s := range pack.FileCollection.NameToPath {
@@ -48,6 +52,7 @@ func RunPipelines(originalPack ResourcePack) {
 
 		bar.Finish()
 	}
+	logrus.Info("Done lol")
 }
 
 func contains(s []string, e string) bool {

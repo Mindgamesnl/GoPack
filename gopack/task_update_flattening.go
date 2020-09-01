@@ -42,7 +42,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// rename texture references
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// search json
-		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), "")
+		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.Path)
 
 		updatedJson := resource.GetPipelineString(pipeline)
 
@@ -53,8 +53,8 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 			if !value.IsObject() && !value.IsArray() && value.Exists() {
 				// replace references to blocks/ and items/
 				asString := value.Str
-				asString = strings.Replace(asString, "items/", "item/", -1)
-				asString = strings.Replace(asString, "blocks/", "block/", -1)
+				asString = strings.Replace(asString, "textures/items/", "textures/item/", -1)
+				asString = strings.Replace(asString, "textures/blocks/", "textures/block/", -1)
 				updatedJson, _ = sjson.Set(updatedJson, key, asString)
 			}
 		}
@@ -445,6 +445,9 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 	return func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// set and apply new name
+		if !strings.Contains(resource.Path, "textures/") {
+			return
+		}
 		resource.Path = strings.Replace(resource.Path, from, to, 1)
 		resource.ReadableName = strings.Replace(resource.ReadableName, from, to, 1)
 		resource.UniqueName = strings.Replace(resource.UniqueName, from, to, 1)
