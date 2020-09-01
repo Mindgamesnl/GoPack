@@ -7,7 +7,5 @@ import (
 
 func main() {
 	originalPack := loader.FromZip("pack.zip")
-	logrus.Info(originalPack)
-
 
 }
