@@ -16,7 +16,10 @@ type ResourcePack struct {
 func FromZip(filename string) ResourcePack {
 	root := "work/original/"
 
-	files, _ := utils.Unzip(filename, root)
+	files, zipErr := utils.Unzip(filename, root)
+	if zipErr != nil {
+		panic(zipErr)
+	}
 
 	// make file collection
 	collection := FileCollection{
@@ -43,7 +46,7 @@ func FromZip(filename string) ResourcePack {
 	}
 
 	mcData := packs.PackMcMeta{}
-	utils.JsonToStruct(root + "pack.mcmeta", &mcData)
+	utils.FileToStruct(root + "pack.mcmeta", &mcData)
 
 	logrus.Info("Loaded pack: " + mcData.Pack.Description, " in format ", mcData.Pack.PackFormat)
 

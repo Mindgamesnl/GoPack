@@ -12,3 +12,7 @@ type Resource struct {
 func (r Resource) ContentAsString() string {
 	return utils.TextFromFile(r.OsPath)
 }
+
+func (r Resource) ContentAsBytes() []byte {
+	return utils.DataFromFile(r.OsPath)
+}

@@ -67,6 +67,14 @@ func Unzip(src string, dest string) ([]string, error) {
 	return filenames, nil
 }
 
+func DataFromFile(file string) []byte {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return data
+}
+
 func TextFromFile(file string) string {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -75,8 +83,21 @@ func TextFromFile(file string) string {
 	return string(data)
 }
 
-func JsonToStruct(file string, target interface{}) interface{} {
+func JsonToStruct(content string, target interface{}) interface{} {
+	json.Unmarshal([]byte(content), &target)
+	return target
+}
+
+func FileToStruct(file string, target interface{}) interface{} {
 	data := TextFromFile(file)
 	json.Unmarshal([]byte(data), &target)
 	return target
+}
+
+func StructToJson(target interface{}) string {
+	t, err := json.Marshal(target)
+	if err != nil {
+		panic(err)
+	}
+	return string(t)
 }
