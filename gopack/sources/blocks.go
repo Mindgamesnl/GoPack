@@ -396,6 +396,7 @@ const blocks = `
 "redstone_side_alt1": "redstone_dust_side_alt1",
 "redstone_up": "redstone_dust_up",
 "reeds": "sugar_cane",
+"reeds_dead": "sugar_cane",
 "repeater_off": "repeater",
 "sandstone_carved": "chiseled_sandstone",
 "sandstone_chiseled": "chiseled_sandstone",
