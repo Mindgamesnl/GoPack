@@ -242,9 +242,6 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("mushroom_red", rename("mushroom_red", "red_mushroom"))
 	pipeline.AddPathContainsHandler("mushroom_brown", rename("mushroom_brown", "brown_mushroom"))
 
-	// slabs
-	pipeline.AddPathContainsHandler("_slab_top", rename("_slab_top", "_slab"))
-
 	// rails, yoink
 	pipeline.AddPathContainsHandler("rail_normal_turned", rename("rail_normal_turned", "rail_corner"))
 	pipeline.AddPathContainsHandler("rail_activator_powered", rename("rail_activator_powered", "activator_rail_on"))
@@ -318,7 +315,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		material := materials[i]
 		for i2 := range types {
 			thing := types[i2]
-			pipeline.AddPathContainsHandler(material+"_"+thing, rename(material+"_"+thing, material+"en_"+thing))
+			pipeline.AddPathContainsHandler(material+"_"+thing, rename(material+"_"+thing, material + "en_" + thing))
 		}
 	}
 
@@ -328,7 +325,8 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("rabbit_raw", rename("rabbit_raw", "rabbit"))
 	pipeline.AddPathContainsHandler("beef_raw", rename("beef_raw", "beef"))
 	pipeline.AddPathContainsHandler("chicken_raw", rename("chicken_raw", "chicken"))
-	pipeline.AddPathContainsHandler("mutton_raw", rename("mutton_raw", "mutton"))
+	pipeline.AddPathContainsHandler("mutton_raw", rename("mutton_raw", "raw_mutton"))
+	pipeline.AddPathContainsHandler("/mutton.", rename("/mutton.", "raw_mutton"))
 	pipeline.AddPathContainsHandler("porkchop_cooked", rename("porkchop_cooked", "cooked_porkchop"))
 	pipeline.AddPathContainsHandler("rabbit_cooked", rename("rabbit_cooked", "cooked_rabbit"))
 	pipeline.AddPathContainsHandler("beef_cooked", rename("beef_cooked", "cooked_beef"))
@@ -437,7 +435,16 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	pipeline.AddPathContainsHandler("llama_gray", rename("llama_gray", "gray"))
 	pipeline.AddPathContainsHandler("llama_white", rename("llama_white", "white"))
 
-	// rename texture references in json
+	// Force all file names to be LOWERCASE, regardless of their type or path
+	// more info can be found in the last json migration of this update
+	pipeline.AddGlobalHandler(func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+		resource.Path = strings.ToLower(resource.Path)
+		resource.ReadableName = strings.ToLower(resource.ReadableName)
+		resource.UniqueName = strings.ToLower(resource.UniqueName)
+		pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
+	})
+
+	// process all json files
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// search json
 		parsed := loadParsedJson(resource.OsPath, resource, pipeline)
@@ -448,6 +455,14 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 		for i := range scan {
 			key := scan[i]
+
+			// handler for texture files
+			// rename texture references in json
+			// but rebuild the json, dont actually set it, since keys can be
+			// a number like fuck.0.you.all.3.bloody.4.cunts
+			// and still will then explode for referencing
+			// fuck.anotherkey.you
+			// since it things that the second level is an array, while in fact, it's not
 			if strings.Contains(key, "textures") {
 				value := parsed.Get(key)
 				// replace references to blocks/ and items/
@@ -455,6 +470,7 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 
 				asString = strings.Replace(asString, "items/", "item/", -1)
 				asString = strings.Replace(asString, "blocks/", "block/", -1)
+				asString = strings.ToLower(asString)
 
 				for s := range textureNameMap {
 					asString = strings.Replace(asString, s, textureNameMap[s], -1)
@@ -463,9 +479,9 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 				// one up
 				parent := key
 				parentParts := strings.Split(parent, ".")
-				parent = strings.Replace(parent, "." + parentParts[len(parentParts)-1], "", -1)
+				parent = strings.Replace(parent, "."+parentParts[len(parentParts)-1], "", -1)
 
-				topLevel := parentParts[len(parentParts) - 1]
+				topLevel := parentParts[len(parentParts)-1]
 
 				updatedMap := make(map[string]string)
 				props := gjson.Get(updatedJson, parent).Map()
@@ -484,9 +500,40 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 				if err != nil {
 					logrus.Info("item ", resource.GetPipelineString(pipeline))
 					logrus.Info("key " + key)
+					logrus.Info("Note: in texture")
 					panic(err)
 				}
 				updated = true
+			} else
+
+			// recursively find model references and force them to be lower case
+			// since minecraft >1.12.2 doesn't allow for uppercase characters
+			// the files already got renamed in a few migrations before, so
+			// this can be done safely
+			// you might ask, why?
+			// because minecraft, fuck you.
+			if strings.Contains(key, "model") {
+				value := parsed.Get(key)
+				if getTypeCache(key, value) == gjson.String {
+					asString := value.Str
+
+					asString = strings.ToLower(asString)
+
+					// and translate it, again
+					for s := range textureNameMap {
+						asString = strings.Replace(asString, s, textureNameMap[s], -1)
+					}
+
+					var err error
+					updatedJson, err = sjson.Set(updatedJson, key, asString)
+					if err != nil {
+						logrus.Info("item ", resource.GetPipelineString(pipeline))
+						logrus.Info("key " + key)
+						logrus.Info("Note: in model")
+						panic(err)
+					}
+					updated = true
+				}
 			}
 		}
 
@@ -498,21 +545,39 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 		}
 	})
 
-	// WHOOOO THATS ITTT
+	// Save all untouched files
+	// Shouldn't be any, since we rename like every fucking file
+	// but i'd rather be safe then sorry and calling it anyway shouldn't be expensive
+	// since it just does checks for files to write, and only does IO when there's something
+	// in the pipeline, which again, shouldn't be anything in the first place.
 	pipeline.SaveUntouched()
 }
 
+var typeCache = make(map[string]gjson.Type)
+
+// getting types is slow as shit
+// so caching it helps a lot
+func getTypeCache(key string, res gjson.Result) gjson.Type {
+	fc, found := typeCache[key]
+	if found {
+		return fc
+	}
+	ft := res.Type
+	typeCache[key] = ft
+	return ft
+}
+
 func rename(from string, to string) func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
+	// build the map of old name > new name while we're at it
 	textureNameMap[from] = to
 
 	return func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// set and apply new name
-		if !strings.Contains(resource.Path, "textures/") {
-			return
+		if strings.Contains(resource.Path, "textures/") || strings.Contains(resource.Path, "models/") {
+			resource.Path = strings.Replace(resource.Path, from, to, 1)
+			resource.ReadableName = strings.Replace(resource.ReadableName, from, to, 1)
+			resource.UniqueName = strings.Replace(resource.UniqueName, from, to, 1)
+			pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
 		}
-		resource.Path = strings.Replace(resource.Path, from, to, 1)
-		resource.ReadableName = strings.Replace(resource.ReadableName, from, to, 1)
-		resource.UniqueName = strings.Replace(resource.UniqueName, from, to, 1)
-		pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
 	}
 }
