@@ -25,11 +25,22 @@ func RunPipelines(originalPack ResourcePack) {
 
 		tasks := (len(pipe.Handlers) + len(pipe.UntouchedResourceHandlers)) * len(pack.FileCollection.NameToPath)
 
+		// load files
+		logrus.Info("Loading files into memory...")
+		ntp := pack.FileCollection.NameToPath
+		loadedCount := 0
+		for s := range ntp {
+			originalFile := ntp[s]
+			file := &originalFile
+			loadedCount++
+			pipe.SaveBytes(file, file.GetPipelineContent(pipe))
+		}
+		logrus.Info("Loaded ", loadedCount, " files")
+
 		bar := pb.Full.Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
 
 		// go over all files yo, very epic
-		ntp := pack.FileCollection.NameToPath
 		for s := range ntp {
 			originalFile := ntp[s]
 
@@ -62,9 +73,9 @@ func RunPipelines(originalPack ResourcePack) {
 			pack.FileCollection.NameToPath[s] = *file
 
 		}
+		bar.Finish()
 		pipe.Flush()
 		time.Sleep(1 * time.Second)
-		bar.Finish()
 		logrus.Info("Converting done. Validating written files...")
 		out := pipe.WrittenFiles
 		for s := range out {
@@ -74,6 +85,8 @@ func RunPipelines(originalPack ResourcePack) {
 			} else {
 				itsOwnData := utils.DataFromFile(s)
 				if string(out[s]) != string(itsOwnData) {
+					logrus.Info("expected ", string(out[s]))
+					logrus.Info("has ", string(itsOwnData))
 					panic(s + " does not equal")
 				}
 			}

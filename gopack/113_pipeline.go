@@ -7,9 +7,9 @@ func Make113Pipeline() {
 
 	// apply updates from 1.12 to 1.13
 	RenamePackFolders(pipeline)
+	MakeEverythingLowercase(pipeline)
 	ConvertItems(pipeline, sources.Get14Blocks())
 	ConvertItems(pipeline, sources.Get14Items())
-	MakeEverythingLowercase(pipeline)
 
 	// TODO: CONVERT LANGUAGE
 

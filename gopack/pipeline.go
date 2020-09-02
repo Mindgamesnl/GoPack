@@ -2,6 +2,7 @@ package gopack
 
 import (
 	"bufio"
+	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strings"
@@ -110,6 +111,7 @@ func writeBytes(targetFolder string, content []byte) {
 
 func (p *Pipeline) Flush() {
 	a := p.WriteQueue
+	logrus.Info("Flushing ", len(a), " files")
 	for s := range a {
 		p.actuallyWrite(s, a[s])
 		//

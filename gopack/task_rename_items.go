@@ -28,19 +28,22 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 		updatedName := set[s]
 
 		converter := func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-			// set and apply new name
-			if strings.Contains(resource.Path, "textures/") || strings.Contains(resource.Path, "models/") {
+			// don't save original
+			if strings.Contains(resource.Path, oldName) {
+				ogContent := resource.GetPipelineContent(pipeline)
+				delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
+
 				resource.Path = strings.Replace(resource.Path, oldName, updatedName, 1)
 				resource.ReadableName = strings.Replace(resource.ReadableName, oldName, updatedName, 1)
 				resource.UniqueName = strings.Replace(resource.UniqueName, oldName, updatedName, 1)
-				pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
+				pipeline.SaveBytes(resource, ogContent)
 			}
 		}
-		
+
 		// rename these files
-		pipeline.AddPathContainsHandler(oldName, converter)
+		pipeline.AddGlobalHandler(converter)
 	}
-	
+
 	// references
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// search json
@@ -56,7 +59,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 			// handler for texture files
 			// rename texture references in json
 			// but rebuild the json, dont actually set it, since keys can be
-			// a number like fuck.0.you.all.3.bloody.4.cunts
+			// a number like fuck.0.you.all.3.bloody.4.idiot
 			// and still will then explode for referencing
 			// fuck.anotherkey.you
 			// since it things that the second level is an array, while in fact, it's not
@@ -139,6 +142,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 				logrus.Info("Writing small file, ", resource.Path)
 			}
 			pipeline.SaveFile(resource, updatedJson)
+			delete(jsonCache, resource.OsPath)
 		}
 	})
 }
