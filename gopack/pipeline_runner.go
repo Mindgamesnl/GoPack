@@ -4,6 +4,7 @@ import (
 	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/sirupsen/logrus"
+	"strings"
 	"time"
 )
 
@@ -27,28 +28,38 @@ func RunPipelines(originalPack ResourcePack) {
 		bar.SetRefreshRate(time.Millisecond * 10)
 
 		// go over all files yo, very epic
-		for s := range pack.FileCollection.NameToPath {
-			originalFile := pack.FileCollection.NameToPath[s]
+		ntp := pack.FileCollection.NameToPath
+		for s := range ntp {
+			originalFile := ntp[s]
+
 			file := &originalFile
-			// go over all handlers
-			for pipeIncrementer := range pipe.Handlers {
-				handler := pipe.Handlers[pipeIncrementer]
-				handler(pack, file, pipe)
-				bar.Increment()
-			}
 
-			for pipeIncrementer := range pipe.UntouchedResourceHandlers {
-				handler := pipe.UntouchedResourceHandlers[pipeIncrementer]
-
-				if !contains(pipe.ProcessedFileNames, file.UniqueName) {
+			if strings.Contains(file.OsPath, ".") {
+				// go over all handlers
+				hdlr := pipe.Handlers
+				for pipeIncrementer := range hdlr {
+					handler := hdlr[pipeIncrementer]
 					handler(pack, file, pipe)
+					bar.Increment()
 				}
+
+				utv := pipe.UntouchedResourceHandlers
+				for pipeIncrementer := range utv {
+					handler := utv[pipeIncrementer]
+
+					if !contains(pipe.ProcessedFileNames, file.UniqueName) {
+						handler(pack, file, pipe)
+					}
+					bar.Increment()
+				}
+			} else {
+				bar.Increment()
 				bar.Increment()
 			}
+
+			pipe.Flush()
 		}
 		bar.Finish()
-		logrus.Info("Flushing files..")
-		pipe.FlushFiles()
 		logrus.Info("Saved!")
 	}
 	logrus.Info("Done lol")

@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	// hypixel.GenGoCode()
 	pack := gopack.FromZip("pack.zip")
 	gopack.RegisterPipelines()
 	gopack.RunPipelines(pack)

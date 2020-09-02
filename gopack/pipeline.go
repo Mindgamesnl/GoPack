@@ -82,14 +82,38 @@ func (p *Pipeline) SaveUntouched() {
 	})
 }
 
-func (p *Pipeline) FlushFiles() {
-	for s := range p.WriteQueue {
-		writeBytes(s, p.WriteQueue[s])
+func writeBytes(targetFolder string, content []byte) {
+
+	// create folder
+	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
+	if fa != nil {
+		panic(fa)
+	}
+
+	f, err := os.Create(targetFolder)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	_, err2 := f.Write(content)
+
+	if err2 != nil {
+		panic(err2)
+	}
+}
+
+func (p *Pipeline) Flush() {
+	a := p.WriteQueue
+	for s := range a {
+		actuallyWrite(s, a[s])
 	}
 	p.WriteQueue = make(map[string][]byte)
 }
 
-func writeBytes(targetFolder string, content []byte) {
+func actuallyWrite(targetFolder string, content []byte) {
 
 	// create folder
 	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)

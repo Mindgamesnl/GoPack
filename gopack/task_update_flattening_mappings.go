@@ -640,4 +640,20 @@ func ApplyFlatteningMapping(pipeline *Pipeline)  {
 	pipeline.AddPathContainsHandler("redstone_torch_on", rename("redstone_torch_on", "redstone_torch"))
 	pipeline.AddPathContainsHandler("anvil_top_damaged_0", rename("anvil_top_damaged_0", "anvil_top"))
 	pipeline.AddPathContainsHandler("birch_fence_gate_closed", rename("birch_fence_gate_closed", "birch_fence_gate"))
+
+	// cotta shit
+	pipeline.AddPathContainsHandler("terracotta_stained_green", rename("terracotta_stained_green", "green_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_lime", rename("terracotta_stained_lime", "lime_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_cyan", rename("terracotta_stained_cyan", "cyan_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_silver", rename("terracotta_stained_silver", "silver_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_light_blue", rename("terracotta_stained_light_blue", "light_blue_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_yellow", rename("terracotta_stained_yellow", "yellow_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_orange", rename("terracotta_stained_orange", "orange_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_red", rename("terracotta_stained_red", "red_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_blue", rename("terracotta_stained_blue", "blue_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_brown", rename("terracotta_stained_brown", "brown_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_white", rename("terracotta_stained_white", "white_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_pink", rename("terracotta_stained_pink", "pink_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_black", rename("terracotta_stained_black", "black_terracotta"))
+	pipeline.AddPathContainsHandler("terracotta_stained_gray", rename("terracotta_stained_gray", "gray_terracotta"))
 }

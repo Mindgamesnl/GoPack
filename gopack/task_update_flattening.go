@@ -26,6 +26,9 @@ func loadParsedJson(osPath string, resource *Resource, pipeline *Pipeline) gjson
 func ApplyFlatteningUpdate(pipeline *Pipeline) {
 	// https://blockbench.net/2018/07/18/changes-to-resource-packs-in-minecraft-1-13/
 
+	// do file mappings
+	ApplyFlatteningMapping(pipeline)
+
 	// flattening part one, rename `textures/blocks` to `/textures/block`
 	pipeline.AddGlobalHandler(func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		if strings.Contains(resource.Path, "textures/blocks") {
@@ -53,9 +56,6 @@ func ApplyFlatteningUpdate(pipeline *Pipeline) {
 			pipeline.SaveBytes(resource, resource.GetPipelineContent(pipeline))
 		}
 	})
-
-	// do file mappings
-	ApplyFlatteningMapping(pipeline)
 
 
 	// Force all file names to be LOWERCASE, regardless of their type or path
