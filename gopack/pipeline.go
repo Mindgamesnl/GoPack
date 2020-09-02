@@ -113,8 +113,8 @@ func (p *Pipeline) Flush() {
 	a := p.WriteQueue
 	logrus.Info("Flushing ", len(a), " files")
 	for s := range a {
+		logrus.Info("Saving ", s)
 		p.actuallyWrite(s, a[s])
-		//
 	}
 	p.WriteQueue = make(map[string][]byte)
 }

@@ -11,14 +11,8 @@ import (
 var jsonCache = make(map[string]gjson.Result)
 
 func loadParsedJson(osPath string, resource *Resource, pipeline *Pipeline) gjson.Result {
-	result, found := jsonCache[osPath]
-
-	if found {
-		return result
-	}
-
 	values := gjson.Parse(resource.GetPipelineString(pipeline))
-	jsonCache[osPath] = values
+
 	return values
 }
 
@@ -73,7 +67,9 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 				asString = strings.ToLower(asString)
 
 				for s := range set {
-					asString = strings.Replace(asString, s, set[s], -1)
+					if strings.HasSuffix(asString, "/" + s) {
+						asString = strings.Replace(asString, s, set[s], -1)
+					}
 				}
 
 				// one up
@@ -121,7 +117,9 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 					// and translate it, again
 					for s := range set {
-						asString = strings.Replace(asString, s, set[s], -1)
+						if strings.HasSuffix(asString, "/" + s) {
+							asString = strings.Replace(asString, s, set[s], -1)
+						}
 					}
 
 					var err error
