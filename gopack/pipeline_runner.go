@@ -61,10 +61,9 @@ func RunPipelines(originalPack ResourcePack) {
 			ntp[s] = *file
 			pack.FileCollection.NameToPath[s] = *file
 
-			pipe.Flush()
-			time.Sleep(1 * time.Millisecond)
 		}
 		pipe.Flush()
+		time.Sleep(1 * time.Second)
 		bar.Finish()
 		logrus.Info("Converting done. Validating written files...")
 		out := pipe.WrittenFiles
