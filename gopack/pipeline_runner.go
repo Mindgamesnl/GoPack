@@ -4,6 +4,7 @@ import (
 	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/sirupsen/logrus"
+	"os"
 	"strings"
 	"time"
 )
@@ -57,10 +58,29 @@ func RunPipelines(originalPack ResourcePack) {
 				bar.Increment()
 			}
 
+			ntp[s] = *file
+			pack.FileCollection.NameToPath[s] = *file
+
 			pipe.Flush()
+			time.Sleep(1 * time.Millisecond)
 		}
+		pipe.Flush()
 		bar.Finish()
-		logrus.Info("Saved!")
+		logrus.Info("Converting done. Validating written files...")
+		out := pipe.WrittenFiles
+		for s := range out {
+			if !fileExists(s) {
+				logrus.Info("File doesn't really exist, " + s)
+				panic("File doesn't really exist, " + s)
+			} else {
+				itsOwnData := utils.DataFromFile(s)
+				if string(out[s]) != string(itsOwnData) {
+					panic(s + " does not equal")
+				}
+			}
+		}
+
+		logrus.Info("Files seem OK")
 	}
 	logrus.Info("Done lol")
 }
@@ -72,4 +92,12 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }

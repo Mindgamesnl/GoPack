@@ -1,6 +1,7 @@
 package gopack
 
 import (
+	"bufio"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,6 +15,7 @@ type Pipeline struct {
 	OutFolder                 string
 	FileCache                 map[string][]byte
 	WriteQueue                map[string][]byte
+	WrittenFiles              map[string][]byte
 }
 
 // create a pipeline with a name (which will also be the output directory/pack and version)
@@ -26,6 +28,7 @@ func CreatePipeline(name string, out string) *Pipeline {
 		OutFolder:                 out,
 		FileCache:                 make(map[string][]byte),
 		WriteQueue:                make(map[string][]byte),
+		WrittenFiles:              make(map[string][]byte),
 	}
 }
 
@@ -108,13 +111,13 @@ func writeBytes(targetFolder string, content []byte) {
 func (p *Pipeline) Flush() {
 	a := p.WriteQueue
 	for s := range a {
-		actuallyWrite(s, a[s])
+		p.actuallyWrite(s, a[s])
+		//
 	}
 	p.WriteQueue = make(map[string][]byte)
 }
 
-func actuallyWrite(targetFolder string, content []byte) {
-
+func (p *Pipeline) actuallyWrite(targetFolder string, content []byte) {
 	// create folder
 	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
 	if fa != nil {
@@ -128,17 +131,23 @@ func actuallyWrite(targetFolder string, content []byte) {
 	}
 
 	defer f.Close()
-
-	_, err2 := f.Write(content)
+	w := bufio.NewWriter(f)
+	_, err2 := w.Write(content)
 
 	if err2 != nil {
 		panic(err2)
 	}
+	fuck := w.Flush()
+	if fuck != nil {
+		panic(fuck)
+	}
+
+	p.WrittenFiles[targetFolder] = content
 }
 
 func (p *Pipeline) SaveBytes(resource *Resource, content []byte) {
 	p.FileCache[resource.UniqueName] = content
-	p.WriteQueue[p.OutFolder + resource.Path] = content
+	p.WriteQueue[p.OutFolder+resource.Path] = content
 }
 
 func (p *Pipeline) SaveFile(resource *Resource, content string) {
