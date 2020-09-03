@@ -5,6 +5,12 @@ GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resource
 
 Every target pack takes around 1 minute to compile and generally executes `loadedCount++` tasks *(on the ImagineFun pack)*. Multi threading is work in progress, it won't really shorten the individual time per pack but should allow you to compile multiple packs at once. Smaller resourcepacks like SprookjesCraft convert to all versions within a minute.
 
+# How to use
+1. Download the latest [release](https://github.com/Mindgamesnl/GoPack/releases) for your platform.
+2. Place the binary next to your 1.12 resourcepack, which must be named `pack.zip`
+3. Execute with `./GoPack` or `./GoPack.exe`
+4. That's it! give it some time and watch your packs appear in the `out/` directory.
+
 ### Example output:
 ```
 mindgamesnl@redstaros-3 GoPack % go run main.go

@@ -133,3 +133,4 @@ work/
 pack.zip
 out/
 .set-token.sh
+dist/
