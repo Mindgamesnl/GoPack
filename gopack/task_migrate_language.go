@@ -25,10 +25,10 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 			}
 
 			parts := strings.Split(line, "=")
-
-			elements[parts[0]] = parts[1]
+			if len(parts) == 2 {
+				elements[parts[0]] = parts[1]
+			}
 		}
-
 
 		resource.Path = strings.Replace(resource.Path, ".lang", ".json", 1)
 		resource.ReadableName = strings.Replace(resource.ReadableName, ".lang", ".json", 1)
