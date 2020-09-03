@@ -1,4 +1,4 @@
-package utils
+package gopack
 
 import (
 	"archive/zip"
@@ -100,4 +100,43 @@ func StructToJson(target interface{}) string {
 		panic(err)
 	}
 	return string(t)
+}
+
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func addFiles(w *zip.Writer, basePath, baseInZip string) {
+	// Open the Directory
+	files, err := ioutil.ReadDir(basePath)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			dat, err := ioutil.ReadFile(basePath + file.Name())
+			if err != nil {
+				panic(err)
+			}
+
+			// Add some files to the archive.
+			f, err := w.Create(baseInZip + file.Name())
+			if err != nil {
+				panic(err)
+			}
+			_, err = f.Write(dat)
+			if err != nil {
+				panic(err)
+			}
+		} else if file.IsDir() {
+			newBase := basePath + file.Name() + "/"
+			addFiles(w, newBase, baseInZip  + file.Name() + "/")
+		}
+	}
 }

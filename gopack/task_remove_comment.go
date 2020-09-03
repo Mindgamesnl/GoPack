@@ -1,7 +1,6 @@
 package gopack
 
 import (
-	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"strings"
@@ -9,7 +8,7 @@ import (
 
 func RemoveComment() func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 	return func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-		scan := utils.FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.OsPath)
+		scan := FindJsonKeys(gjson.Parse(resource.GetPipelineString(pipeline)), resource.OsPath)
 
 		updatedJson := resource.GetPipelineString(pipeline)
 

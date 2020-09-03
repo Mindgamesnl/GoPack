@@ -14,11 +14,10 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 		for s := range set {
 			oldString := s
 			updatedString := set[s]
-			ogContent = strings.Replace(ogContent, oldString, updatedString, -1)
+			ogContent = strings.Replace(ogContent, oldString, updatedString, 1)
 		}
 
 		pipeline.SaveFile(resource, ogContent)
-
 	}
 
 	// rename these files

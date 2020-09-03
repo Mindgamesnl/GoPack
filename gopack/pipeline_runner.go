@@ -2,10 +2,8 @@ package gopack
 
 import (
 	"archive/zip"
-	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -19,7 +17,7 @@ func AddPipeline(pipeline *Pipeline) {
 }
 
 func RunPipelines(originalPack ResourcePack) {
-	utils.ResetFileCache()
+	ResetFileCache()
 	for i := range Pipelines {
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
 		pipe := Pipelines[i] // copy the pipeline
@@ -88,7 +86,7 @@ func RunPipelines(originalPack ResourcePack) {
 				logrus.Info("File doesn't really exist, " + s)
 				panic("File doesn't really exist, " + s)
 			} else {
-				itsOwnData := utils.DataFromFile(s)
+				itsOwnData := DataFromFile(s)
 				if string(out[s]) != string(itsOwnData) {
 					logrus.Info("expected ", string(out[s]))
 					logrus.Info("has ", string(itsOwnData))
@@ -130,7 +128,7 @@ func RunPipelines(originalPack ResourcePack) {
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
 
-	os.RemoveAll("work/")
+	// os.RemoveAll("work/")
 }
 
 func contains(s []string, e string) bool {
@@ -140,42 +138,4 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
-}
-
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
-}
-
-func addFiles(w *zip.Writer, basePath, baseInZip string) {
-	// Open the Directory
-	files, err := ioutil.ReadDir(basePath)
-	if err != nil {
-		panic(err)
-	}
-
-	for _, file := range files {
-		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(basePath + file.Name())
-			if err != nil {
-				panic(err)
-			}
-
-			// Add some files to the archive.
-			f, err := w.Create(baseInZip + file.Name())
-			if err != nil {
-				panic(err)
-			}
-			_, err = f.Write(dat)
-			if err != nil {
-				panic(err)
-			}
-		} else if file.IsDir() {
-			newBase := basePath + file.Name() + "/"
-			addFiles(w, newBase, baseInZip  + file.Name() + "/")
-		}
-	}
 }

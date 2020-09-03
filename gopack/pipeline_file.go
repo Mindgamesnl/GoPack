@@ -1,7 +1,5 @@
 package gopack
 
-import "github.com/Mindgamesnl/GoPack/gopack/utils"
-
 type Resource struct {
 	ReadableName string
 	UniqueName   string
@@ -10,11 +8,11 @@ type Resource struct {
 }
 
 func (r Resource) ContentAsString() string {
-	return utils.TextFromFile(r.OsPath)
+	return TextFromFile(r.OsPath)
 }
 
 func (r Resource) ContentAsBytes() []byte {
-	return utils.DataFromFile(r.OsPath)
+	return DataFromFile(r.OsPath)
 }
 
 func (r Resource) GetPipelineString(pipeline *Pipeline) string {

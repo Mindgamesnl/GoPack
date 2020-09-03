@@ -42,9 +42,8 @@ func (p *Pipeline) AddGlobalHandler(handler func(originalPack ResourcePack, reso
 	})
 }
 
-// add a handler for all png files or something, so the filetype argument would be "png" with or without the dot
+// add a handler for all png files or something, so the filetype argument would be "png" without the dot
 func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
-	filetype = strings.Replace(filetype, ".", "", -1)
 	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		if strings.Contains(resource.ReadableName, "."+filetype) {
 			handler(originalPack, resource, pipeline)

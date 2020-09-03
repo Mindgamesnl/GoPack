@@ -1,7 +1,6 @@
 package gopack
 
 import (
-	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -23,7 +22,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 		converter := func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 			// don't save original
-			if strings.HasSuffix(resource.Path, oldName) {
+			if strings.Contains(resource.Path, "/" + oldName + ".") {
 				ogContent := resource.GetPipelineContent(pipeline)
 				delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
 
@@ -42,7 +41,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 	pipeline.AddForFileType("json", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// search json
 		parsed := loadParsedJson(resource.OsPath, resource, pipeline)
-		scan := utils.FindJsonKeys(parsed, resource.OsPath)
+		scan := FindJsonKeys(parsed, resource.OsPath)
 
 		updatedJson := resource.GetPipelineString(pipeline)
 		updated := false

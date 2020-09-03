@@ -1,7 +1,6 @@
 package gopack
 
 import (
-	"github.com/Mindgamesnl/GoPack/gopack/utils"
 	"github.com/sirupsen/logrus"
 	"strings"
 )
@@ -15,7 +14,7 @@ type ResourcePack struct {
 func FromZip(filename string) ResourcePack {
 	root := "work/original/"
 
-	files, zipErr := utils.Unzip(filename, root)
+	files, zipErr := Unzip(filename, root)
 	if zipErr != nil {
 		panic(zipErr)
 	}
@@ -36,7 +35,7 @@ func FromZip(filename string) ResourcePack {
 		// duplicate file names can occur within a pack, so we should handle it
 		resource := Resource{
 			name,
-			name + "@" + utils.RandomString(5),
+			name + "@" + RandomString(5),
 			path,
 			root + path,
 		}
@@ -45,7 +44,7 @@ func FromZip(filename string) ResourcePack {
 	}
 
 	mcData := PackMcMeta{}
-	utils.FileToStruct(root + "pack.mcmeta", &mcData)
+	FileToStruct(root + "pack.mcmeta", &mcData)
 
 	logrus.Info("Loaded pack: " + mcData.Pack.Description, " in format ", mcData.Pack.PackFormat)
 
