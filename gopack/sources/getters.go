@@ -37,3 +37,10 @@ func GetLang14() map[string]string {
 	_ = json.Unmarshal([]byte(lang14), &a)
 	return a
 }
+
+func GetForcedContent() map[string]string {
+	a := make(map[string]string)
+	_ = json.Unmarshal([]byte(forcedContent), &a)
+	return a
+}
+

@@ -19,6 +19,7 @@ func Make115Pipeline() {
 	ConvertItems(pipeline, sources.Get14Items())
 	ConvertItems(pipeline, sources.GetBlocks())
 	ConvertItems(pipeline, sources.GetItems())
+	ForceContent(pipeline, sources.GetForcedContent())
 
 	AddPipeline(pipeline)
 }
