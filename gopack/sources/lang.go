@@ -16,6 +16,15 @@ const lang14 = `
 
 const lang = `
 {
+"title.oldgl1": "title.oldgl.eol.line1",
+"title.oldgl2": "title.oldgl.eol.line2",
+"block.minecraft.sign": "block.minecraft.oak_sign",
+"block.minecraft.wall_sign": "block.minecraft.oak_wall_sign",
+"item.minecraft.rose_red": "item.minecraft.red_dye",
+"item.minecraft.cactus_green": "item.minecraft.green_dye",
+"item.minecraft.dandelion_yellow": "item.minecraft.yellow_dye",
+"entity.minecraft.villager.tool_smith": "entity.minecraft.villager.toolsmith",
+"entity.minecraft.villager.weapon_smith": "entity.minecraft.villager.weaponsmith",
 "tile.air.name": "block.minecraft.air",
 "tile.barrier.name": "block.minecraft.barrier",
 "tile.stone.stone.name": "block.minecraft.stone",

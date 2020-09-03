@@ -18,7 +18,6 @@ func Make115Pipeline() {
 	ConvertItems(pipeline, sources.GetBlocks())
 	ConvertItems(pipeline, sources.GetItems())
 	ForceContent(pipeline, sources.GetForcedContent())
-	MigrateLanguage(pipeline, sources.GetLang14())
 	MigrateLanguage(pipeline, sources.GetLang())
 
 	pipeline.SaveUntouched()

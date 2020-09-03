@@ -11,8 +11,12 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 		// translate
 		ogContent := resource.GetPipelineString(pipeline)
 		delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
+		delete(pipeline.FileCache, resource.UniqueName)
 
 		elements := make(map[string]string)
+
+		// because windows
+		set["\r"] = ""
 
 		lines := strings.Split(ogContent, "\n")
 
@@ -34,7 +38,10 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 		resource.ReadableName = strings.Replace(resource.ReadableName, ".lang", ".json", 1)
 		resource.UniqueName = strings.Replace(resource.UniqueName, ".lang", ".json", 1)
 
-		a, _ := json.Marshal(elements)
+		a, ornot := json.Marshal(elements)
+		if ornot != nil {
+			panic(ornot)
+		}
 
 		pipeline.SaveBytes(resource, a)
 	}
