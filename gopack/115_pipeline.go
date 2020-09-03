@@ -5,8 +5,6 @@ import "github.com/Mindgamesnl/GoPack/gopack/sources"
 func Make115Pipeline() {
 	pipeline := CreatePipeline("to 1.15 (remove secrets, flattening)", "work/115/")
 
-	// TODO: CONVERT LANGUAGE
-
 	// update format
 	pipeline.AddForFileName("pack.mcmeta", SetMetaRevision(5))
 	// remove comments
@@ -20,6 +18,8 @@ func Make115Pipeline() {
 	ConvertItems(pipeline, sources.GetBlocks())
 	ConvertItems(pipeline, sources.GetItems())
 	ForceContent(pipeline, sources.GetForcedContent())
+	MigrateLanguage(pipeline, sources.GetLang14())
+	MigrateLanguage(pipeline, sources.GetLang())
 
 	AddPipeline(pipeline)
 }
