@@ -21,5 +21,6 @@ func Make115Pipeline() {
 	MigrateLanguage(pipeline, sources.GetLang14())
 	MigrateLanguage(pipeline, sources.GetLang())
 
+	pipeline.SaveUntouched()
 	AddPipeline(pipeline)
 }
