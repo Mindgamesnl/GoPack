@@ -131,3 +131,5 @@ fabric.properties
 # work
 work/
 pack.zip
+out/
+.set-token.sh

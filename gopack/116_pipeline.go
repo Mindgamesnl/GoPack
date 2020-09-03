@@ -3,7 +3,7 @@ package gopack
 import "github.com/Mindgamesnl/GoPack/gopack/sources"
 
 func Make116Pipeline() {
-	pipeline := CreatePipeline("to 1.16 (remove secrets, flattening)", "work/116/")
+	pipeline := CreatePipeline("to 1.16 (remove secrets, flattening)", "work/116/", "1.16.zip")
 
 	// update format
 	pipeline.AddForFileName("pack.mcmeta", SetMetaRevision(6))

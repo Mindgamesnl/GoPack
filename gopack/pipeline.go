@@ -17,10 +17,11 @@ type Pipeline struct {
 	FileCache                 map[string][]byte
 	WriteQueue                map[string][]byte
 	WrittenFiles              map[string][]byte
+	OutputName                string
 }
 
 // create a pipeline with a name (which will also be the output directory/pack and version)
-func CreatePipeline(name string, out string) *Pipeline {
+func CreatePipeline(name string, out string, outputName string) *Pipeline {
 	return &Pipeline{
 		Name:                      name,
 		UntouchedResourceHandlers: []func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline){},
@@ -30,6 +31,7 @@ func CreatePipeline(name string, out string) *Pipeline {
 		FileCache:                 make(map[string][]byte),
 		WriteQueue:                make(map[string][]byte),
 		WrittenFiles:              make(map[string][]byte),
+		OutputName:                outputName,
 	}
 }
 
