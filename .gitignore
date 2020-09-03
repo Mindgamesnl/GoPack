@@ -134,3 +134,4 @@ pack.zip
 out/
 .set-token.sh
 dist/
+release.sh
