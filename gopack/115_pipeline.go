@@ -20,6 +20,5 @@ func Make115Pipeline() {
 	ConvertItems(pipeline, sources.GetBlocks())
 	ConvertItems(pipeline, sources.GetItems())
 
-	// pipeline.SaveUntouched()
 	AddPipeline(pipeline)
 }

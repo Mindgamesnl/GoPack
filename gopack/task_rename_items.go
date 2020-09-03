@@ -23,7 +23,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 		converter := func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 			// don't save original
-			if strings.Contains(resource.Path, oldName) {
+			if strings.HasSuffix(resource.Path, oldName) {
 				ogContent := resource.GetPipelineContent(pipeline)
 				delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
 
@@ -67,7 +67,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 				asString = strings.ToLower(asString)
 
 				for s := range set {
-					if strings.HasSuffix(asString, "/" + s) {
+					if strings.HasSuffix(asString, "/" + s) && !strings.Contains(asString, "custom/") {
 						asString = strings.Replace(asString, s, set[s], -1)
 					}
 				}
@@ -117,7 +117,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 					// and translate it, again
 					for s := range set {
-						if strings.HasSuffix(asString, "/" + s) {
+						if strings.HasSuffix(asString, "/" + s) && !strings.Contains(asString, "custom/") {
 							asString = strings.Replace(asString, s, set[s], -1)
 						}
 					}

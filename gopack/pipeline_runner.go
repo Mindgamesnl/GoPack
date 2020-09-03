@@ -33,9 +33,9 @@ func RunPipelines(originalPack ResourcePack) {
 			originalFile := ntp[s]
 			file := &originalFile
 			loadedCount++
-			pipe.SaveBytes(file, file.GetPipelineContent(pipe))
+			file.GetPipelineContent(pipe)
 		}
-		logrus.Info("Loaded ", loadedCount, " files")
+		logrus.Info("Loaded ", len(pipe.FileCache), " files")
 
 		bar := pb.Full.Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
