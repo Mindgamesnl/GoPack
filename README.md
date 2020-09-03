@@ -1,9 +1,9 @@
 # GoPack
 Minecraft resourcepack translator in Go
 
-GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resourcepacks from a single `1.12.2` resource pack. It does this by completely scanning the input pack and then running migrations to rename all the assets and update the json pointers. It also removes any potential secrets during this process and can even minimize assets. GoPack supports Textures, Models and Sounds.
+GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resourcepacks from a single `1.12.2` resource pack. It does this by completely scanning the input pack and then running migrations to rename all the assets and update the json pointers. It also removes any potential secrets during this process and can even minimize assets. GoPack supports Textures, Models, Sounds and Language Files. 
 
-Every target pack takes around 1 minute to compile and generally executes `2502258` tasks *(on the ImagineFun pack)*. Multi threading is work in progress, it won't really shorten the individual time per pack but should allow you to compile multiple packs at once.
+Every target pack takes around 1 minute to compile and generally executes `loadedCount++` tasks *(on the ImagineFun pack)*. Multi threading is work in progress, it won't really shorten the individual time per pack but should allow you to compile multiple packs at once. Smaller resourcepacks like SprookjesCraft convert to all versions within a minute.
 
 ### Example output:
 ```

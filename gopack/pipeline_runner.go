@@ -32,8 +32,10 @@ func RunPipelines(originalPack ResourcePack) {
 		for s := range ntp {
 			originalFile := ntp[s]
 			file := &originalFile
-			loadedCount++
-			file.GetPipelineContent(pipe)
+			if strings.Contains(file.Path, ".") {
+				loadedCount++
+				file.GetPipelineContent(pipe)
+			}
 		}
 		logrus.Info("Loaded ", len(pipe.FileCache), " files")
 
