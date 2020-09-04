@@ -6,12 +6,11 @@ import (
 )
 
 func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
-
 	converter := func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		// translate
 		ogContent := resource.GetPipelineString(pipeline)
 		delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
-		delete(pipeline.FileCache, resource.UniqueName)
+		pipeline.ProcessedFileNames = append(pipeline.ProcessedFileNames, resource.UniqueName)
 
 		elements := make(map[string]string)
 
@@ -37,15 +36,16 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 		resource.Path = strings.Replace(resource.Path, ".lang", ".json", 1)
 		resource.ReadableName = strings.Replace(resource.ReadableName, ".lang", ".json", 1)
 		resource.UniqueName = strings.Replace(resource.UniqueName, ".lang", ".json", 1)
+		pipeline.ProcessedFileNames = append(pipeline.ProcessedFileNames, resource.UniqueName)
 
 		a, ornot := json.Marshal(elements)
 		if ornot != nil {
 			panic(ornot)
 		}
 
-		pipeline.SaveBytes(resource, a)
+		pipeline.SaveFile(resource, string(a))
 	}
 
 	// rename these files
-	pipeline.AddForFileType("lang", converter)
+	pipeline.AddPathContainsHandler("minecraft/lang/", converter)
 }
