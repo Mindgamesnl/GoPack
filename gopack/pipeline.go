@@ -46,8 +46,8 @@ func (p *Pipeline) AddGlobalHandler(handler func(originalPack ResourcePack, reso
 func (p *Pipeline) AddForFileType(filetype string, handler func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline)) {
 	p.Handlers = append(p.Handlers, func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 		if strings.HasSuffix(resource.Path, filetype) {
-			handler(originalPack, resource, pipeline)
 			p.ProcessedFileNames = append(p.ProcessedFileNames, resource.UniqueName)
+			handler(originalPack, resource, pipeline)
 		}
 	})
 }
