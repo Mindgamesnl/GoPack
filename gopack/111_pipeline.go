@@ -8,7 +8,7 @@ func Make111Pipeline() {
 	// remove comments
 	pipeline.AddForFileType("json", RemoveComment())
 
-	CompressAssets(pipeline)
+	CompressResources(pipeline)
 
 	pipeline.SaveUntouched()
 	AddPipeline(pipeline)
