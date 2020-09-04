@@ -1,7 +1,5 @@
 package gopack
 
-import "github.com/Mindgamesnl/GoPack/gopack/sources"
-
 func Make116Pipeline() {
 	pipeline := CreatePipeline("to 1.16 (remove secrets, flattening)", "work/116/", "1.16.zip")
 
@@ -12,12 +10,12 @@ func Make116Pipeline() {
 
 	MakeEverythingLowercase(pipeline)
 	RenamePackFolders(pipeline)
-	ConvertItems(pipeline, sources.Get14Blocks())
-	ConvertItems(pipeline, sources.Get14Items())
-	ConvertItems(pipeline, sources.GetBlocks())
-	ConvertItems(pipeline, sources.GetItems())
-	ForceContent(pipeline, sources.GetForcedContent())
-	MigrateLanguage(pipeline, sources.GetLang())
+	ConvertItems(pipeline, Get14Blocks())
+	ConvertItems(pipeline, Get14Items())
+	ConvertItems(pipeline, GetBlocks())
+	ConvertItems(pipeline, GetItems())
+	ForceContent(pipeline, GetForcedContent())
+	MigrateLanguage(pipeline, GetLang())
 
 	pipeline.SaveUntouched()
 	AddPipeline(pipeline)

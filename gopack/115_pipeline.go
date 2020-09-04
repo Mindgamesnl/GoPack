@@ -1,7 +1,5 @@
 package gopack
 
-import "github.com/Mindgamesnl/GoPack/gopack/sources"
-
 func Make115Pipeline() {
 	pipeline := CreatePipeline("to 1.15 (remove secrets, flattening)", "work/115/", "1.15.zip")
 
@@ -13,12 +11,12 @@ func Make115Pipeline() {
 	// apply updates from 1.12 to 1.15
 	MakeEverythingLowercase(pipeline)
 	RenamePackFolders(pipeline)
-	ConvertItems(pipeline, sources.Get14Blocks())
-	ConvertItems(pipeline, sources.Get14Items())
-	ConvertItems(pipeline, sources.GetBlocks())
-	ConvertItems(pipeline, sources.GetItems())
-	ForceContent(pipeline, sources.GetForcedContent())
-	MigrateLanguage(pipeline, sources.GetLang())
+	ConvertItems(pipeline, Get14Blocks())
+	ConvertItems(pipeline, Get14Items())
+	ConvertItems(pipeline, GetBlocks())
+	ConvertItems(pipeline, GetItems())
+	ForceContent(pipeline, GetForcedContent())
+	MigrateLanguage(pipeline, GetLang())
 
 	pipeline.SaveUntouched()
 	AddPipeline(pipeline)

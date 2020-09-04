@@ -1,4 +1,4 @@
-package sources
+package gopack
 
 const lang14 = `
 {
