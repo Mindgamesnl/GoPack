@@ -11,7 +11,7 @@ import (
 )
 
 func CompressAsset(path string, strength int) []byte {
-	return optimizePath(path, RGBAConversion, strength)
+	return optimizePath(path, NoConversion, strength)
 }
 
 func optimizePath(inPath string, colorConversion ColorConversion, quantization int) []byte {
