@@ -110,9 +110,9 @@ func writeBytes(targetFolder string, content []byte) {
 	}
 }
 
-func (p *Pipeline) Flush() {
+func (p *Pipeline) Flush(originalCount int) {
 	a := p.WriteQueue
-	logrus.Info("Flushing ", len(a), " files")
+	logrus.Info("Flushing ", len(a), " out of ", originalCount, " files")
 	for s := range a {
 		p.actuallyWrite(s, a[s])
 	}

@@ -22,12 +22,7 @@ func RunPipelines(originalPack ResourcePack) {
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
 		pipe := Pipelines[i] // copy the pipeline
 
-		logrus.Info("Executing pipeline: " + pipe.Name)
-
 		tasks := (len(pipe.Handlers) + len(pipe.UntouchedResourceHandlers)) * len(pack.FileCollection.NameToPath)
-
-		// load files
-		logrus.Info("Loading files into memory...")
 		ntp := pack.FileCollection.NameToPath
 		loadedCount := 0
 		for s := range ntp {
@@ -38,9 +33,9 @@ func RunPipelines(originalPack ResourcePack) {
 				file.GetPipelineContent(pipe)
 			}
 		}
-		logrus.Info("Loaded ", len(pipe.FileCache), " files")
 
-		bar := pb.Full.Start(tasks)
+		tmpl := `{{ red "` + pipe.Name + `:" }} {{percent .}} {{ bar . "[" "=" ">" " "}} {{speed . | rndcolor }} {{rtime . "ETA %s"}}`
+		bar := pb.ProgressBarTemplate(tmpl).Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
 
 		// go over all files yo, very epic
@@ -77,10 +72,10 @@ func RunPipelines(originalPack ResourcePack) {
 		}
 
 		bar.Finish()
-		pipe.Flush()
-		time.Sleep(1 * time.Second)
-		logrus.Info("Converting done. Validating written files...")
+
+		pipe.Flush(len(pipe.FileCache))
 		out := pipe.WrittenFiles
+
 		for s := range out {
 			if !fileExists(s) {
 				logrus.Info("File doesn't really exist, " + s)
@@ -96,8 +91,6 @@ func RunPipelines(originalPack ResourcePack) {
 		}
 
 		zipName := "out/" + pipe.OutputName
-
-		logrus.Info("Files seem OK, making output zip ")
 
 		fer := os.MkdirAll(filepath.Dir(zipName), os.ModePerm)
 		if fer != nil {
