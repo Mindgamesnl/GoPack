@@ -15,37 +15,21 @@ GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resource
 ### Example output:
 ```
 mindgamesnl@redstaros-3 GoPack % go run main.go
-INFO[0001] Loaded pack: Wakanda Forever. (1977-2020) in format 3 
-INFO[0001] Starting pipelines                           
-INFO[0001] Initializing pipelines took 0MS              
-INFO[0001] Executing pipeline: to 1.11 (remove secrets) 
-INFO[0001] Loading files into memory...                 
-INFO[0001] Loaded 2446 files                            
-12230 / 12230 [--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 159 p/s 1m17s
-INFO[0078] Flushing 2446 files                          
-INFO[0080] Converting done. Validating written files... 
-INFO[0080] Files seem OK                                
-INFO[0080] Executing pipeline: to 1.13 (remove secrets, flattening) 
-INFO[0080] Loading files into memory...                 
-INFO[0081] Loaded 2446 files                            
-212802 / 212802 [-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 3050 p/s 1m10s
-INFO[0151] Flushing 2605 files                          
-INFO[0152] Converting done. Validating written files... 
-INFO[0153] Files seem OK                                
-INFO[0153] Executing pipeline: to 1.15 (remove secrets, flattening) 
-INFO[0153] Loading files into memory...                 
-INFO[0154] Loaded 2446 files                            
-3270302 / 3270302 [--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 41862 p/s 1m18s
-INFO[0232] Flushing 2446 files                          
-INFO[0234] Converting done. Validating written files... 
-INFO[0234] Files seem OK                                
-INFO[0234] Executing pipeline: to 1.16 (remove secrets, flattening) 
-INFO[0234] Loading files into memory...                 
-INFO[0235] Loaded 2446 files                            
-3270302 / 3270302 [--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------] 100.00% 44135 p/s 1m15s
-INFO[0309] Flushing 2446 files                          
-INFO[0311] Converting done. Validating written files... 
-INFO[0311] Files seem OK
+INFO[0000] pack.zip currently is 18MB                   
+INFO[0000] Loaded pack: Wakanda Forever. (1977-2020) in format 3 
+to 1.11 (remove secrets): 100.00% [======================================================================================================================================================================================] 228 p/s 1m16s
+INFO[0077] Flushing 2472 out of 2472 files              
+INFO[0079] out/1.11-1.12.zip turned out to be 15MB      
+to 1.13 (remove secrets, flattening): 100.00% [=========================================================================================================================================================================] 2916 p/s 1m16s
+INFO[0155] Flushing 2472 out of 4881 files              
+INFO[0158] out/1.13-1.14.zip turned out to be 15MB      
+to 1.15 (remove secrets, flattening): 100.00% [========================================================================================================================================================================] 41052 p/s 1m20s
+INFO[0239] Flushing 2471 out of 2567 files              
+INFO[0241] out/1.15.zip turned out to be 15MB           
+to 1.16 (remove secrets, flattening): 100.00% [========================================================================================================================================================================] 41568 p/s 1m20s
+INFO[0322] Flushing 2471 out of 2472 files              
+INFO[0324] out/1.16.zip turned out to be 15MB           
+INFO[0324] Finished pipeline, cleaning up..  
 ``` 
 
 # TODO:
