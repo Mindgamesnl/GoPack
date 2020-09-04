@@ -1,7 +1,6 @@
 package gopack
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"image"
@@ -12,7 +11,7 @@ import (
 )
 
 func CompressAsset(path string, strength int) []byte {
-	return optimizePath(path, NoConversion, strength)
+	return optimizePath(path, RGBAConversion, strength)
 }
 
 func optimizePath(inPath string, colorConversion ColorConversion, quantization int) []byte {
@@ -20,21 +19,20 @@ func optimizePath(inPath string, colorConversion ColorConversion, quantization i
 	inFile, openErr := os.Open(inPath)
 	if openErr != nil {
 		fmt.Printf("couldn't open %v: %v\n", inPath, openErr)
-		return nil
+		panic(openErr)
 	}
 
 	decoded, _, decodeErr := image.Decode(inFile)
 	inFile.Close()
 	if decodeErr != nil {
 		fmt.Printf("couldn't decode %v: %v\n", inPath, decodeErr)
-		return nil
+		panic(decodeErr)
 	}
 
 	optimized := Compress(decoded, colorConversion, quantization)
 
-	var content bytes.Buffer
-	bufferWriter := bufio.NewWriter(&content)
-	fuck := png.Encode(bufferWriter, optimized)
+	content := new(bytes.Buffer)
+	fuck := png.Encode(content, optimized)
 
 	if fuck != nil {
 		panic(fuck)
