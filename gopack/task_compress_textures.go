@@ -3,12 +3,7 @@ package gopack
 func CompressAssets(pipeline *Pipeline)  {
 
 	pipeline.AddForFileType("png", func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
-		compressedData := CompressAsset(resource.OsPath, 20)
-
-		// if its empty, try again with a lower strength
-		if len(compressedData) == 0 {
-			compressedData = CompressAsset(resource.OsPath, 10)
-		}
+		compressedData := CompressAsset(resource.OsPath, 10)
 
 		// 0 again? try 5
 		if len(compressedData) == 0 {
