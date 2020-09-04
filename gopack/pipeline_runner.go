@@ -125,6 +125,9 @@ func RunPipelines(originalPack ResourcePack) {
 		if err != nil {
 			panic(err)
 		}
+
+		// read the zip and find the file size
+		logrus.Info(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))))
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
 

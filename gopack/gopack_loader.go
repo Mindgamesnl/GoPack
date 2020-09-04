@@ -12,6 +12,7 @@ type ResourcePack struct {
 }
 
 func FromZip(filename string) ResourcePack {
+	logrus.Info(filename, " currently is ", readableSize(len(DataFromFile(filename))))
 	root := "work/original/"
 
 	files, zipErr := Unzip(filename, root)
