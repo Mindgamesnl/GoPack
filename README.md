@@ -47,6 +47,6 @@ INFO[0311] Files seem OK
 
 # TODO:
 - Subedive particle textures
-- Use aggressive PNG compression
-- Obfuscate file maps
-- Implement a bedrock pipeline
+
+### Credits
+- Png compression by [lossy](https://github.com/foobaz/lossypng) (slightly modified to support in-memory compression)

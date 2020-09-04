@@ -8,6 +8,8 @@ func Make111Pipeline() {
 	// remove comments
 	pipeline.AddForFileType("json", RemoveComment())
 
+	CompressAssets(pipeline)
+
 	pipeline.SaveUntouched()
 	AddPipeline(pipeline)
 }

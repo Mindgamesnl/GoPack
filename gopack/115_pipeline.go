@@ -18,6 +18,8 @@ func Make115Pipeline() {
 	ForceContent(pipeline, GetForcedContent())
 	MigrateLanguage(pipeline, GetLang())
 
+	CompressAssets(pipeline)
+
 	pipeline.SaveUntouched()
 	AddPipeline(pipeline)
 }
