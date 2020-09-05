@@ -37,7 +37,7 @@ func RunPipelines(originalPack ResourcePack) {
 			}
 		}
 
-		tmpl := `{{ red "` + pipe.Name + `:" }} {{percent .}} {{ bar . "[" "=" ">" " "}} {{speed . | rndcolor }} {{rtime . "ETA %s"}}`
+		tmpl := `{{ green "` + pipe.Name + `:" }} {{percent .}} {{ bar . "[" "=" ">" " "}} {{speed . | rndcolor }} {{rtime . "ETA %s"}}`
 		bar := pb.ProgressBarTemplate(tmpl).Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
 
@@ -114,7 +114,7 @@ func RunPipelines(originalPack ResourcePack) {
 		if err != nil {
 			panic(err)
 		}
-		statusReports = append(statusReports, fmt.Sprintf(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache)))
+		statusReports = append(statusReports, fmt.Sprint(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache)))
 		HashFile(zipName)
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
