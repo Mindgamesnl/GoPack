@@ -2,6 +2,7 @@ package gopack
 
 import (
 	"archive/zip"
+	"fmt"
 	"github.com/cheggaaa/pb/v3"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -11,6 +12,7 @@ import (
 )
 
 var Pipelines []*Pipeline
+var statusReports = []string{}
 
 func AddPipeline(pipeline *Pipeline) {
 	Pipelines = append(Pipelines, pipeline)
@@ -121,11 +123,17 @@ func RunPipelines(originalPack ResourcePack) {
 		}
 
 		// read the zip and find the file size
-		logrus.Info(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache))
+		fmt.Sprintf(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache))
+		statusReports = append(statusReports, )
+		HashFile(zipName)
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
 
 	os.RemoveAll("work/")
+	for i := range statusReports {
+		logrus.Info(statusReports[i])
+	}
+	SaveHashes()
 }
 
 func contains(s []string, e string) bool {

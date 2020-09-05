@@ -1,9 +1,6 @@
 package gopack
 
 import (
-	"bufio"
-	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -97,29 +94,7 @@ func (p *Pipeline) Flush() int {
 
 func (p *Pipeline) actuallyWrite(targetFolder string, content []byte) {
 	// create folder
-	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
-	if fa != nil {
-		panic(fa)
-	}
-
-	f, err := os.Create(targetFolder)
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer f.Close()
-	w := bufio.NewWriter(f)
-	_, err2 := w.Write(content)
-
-	if err2 != nil {
-		panic(err2)
-	}
-	fuck := w.Flush()
-	if fuck != nil {
-		panic(fuck)
-	}
-
+	WriteToFile(targetFolder, content)
 	p.WrittenFiles[targetFolder] = content
 }
 

@@ -1,8 +1,11 @@
 package gopack
 
 import (
+	"bufio"
 	"fmt"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -30,4 +33,29 @@ func readableSize(size int) string {
 		size = (size + 500) / 1000
 	}
 	return fmt.Sprintf("%d%v", size, suffixes[i])
+}
+
+func WriteToFile(targetFolder string, content []byte)  {
+	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
+	if fa != nil {
+		panic(fa)
+	}
+
+	f, err := os.Create(targetFolder)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+	w := bufio.NewWriter(f)
+	_, err2 := w.Write(content)
+
+	if err2 != nil {
+		panic(err2)
+	}
+	fuck := w.Flush()
+	if fuck != nil {
+		panic(fuck)
+	}
 }
