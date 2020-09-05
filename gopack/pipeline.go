@@ -2,7 +2,6 @@ package gopack
 
 import (
 	"bufio"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strings"
@@ -87,36 +86,13 @@ func (p *Pipeline) SaveUntouched() {
 	})
 }
 
-func writeBytes(targetFolder string, content []byte) {
-
-	// create folder
-	fa := os.MkdirAll(filepath.Dir(targetFolder), os.ModePerm)
-	if fa != nil {
-		panic(fa)
-	}
-
-	f, err := os.Create(targetFolder)
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer f.Close()
-
-	_, err2 := f.Write(content)
-
-	if err2 != nil {
-		panic(err2)
-	}
-}
-
-func (p *Pipeline) Flush(originalCount int) {
+func (p *Pipeline) Flush() int {
 	a := p.WriteQueue
-	logrus.Info("Flushing ", len(a), " out of ", originalCount, " files")
 	for s := range a {
 		p.actuallyWrite(s, a[s])
 	}
 	p.WriteQueue = make(map[string][]byte)
+	return len(a)
 }
 
 func (p *Pipeline) actuallyWrite(targetFolder string, content []byte) {

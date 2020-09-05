@@ -13,7 +13,7 @@ func ForceContent(pipeline *Pipeline, set map[string]string) {
 			// don't save original
 			if strings.HasSuffix(resource.Path, oldName) {
 				delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
-				pipeline.SaveBytes(resource, []byte(content))
+				pipeline.SaveFile(resource, content)
 			}
 		}
 

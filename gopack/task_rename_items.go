@@ -29,6 +29,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 				resource.Path = strings.Replace(resource.Path, oldName, updatedName, 1)
 				resource.ReadableName = strings.Replace(resource.ReadableName, oldName, updatedName, 1)
 				resource.UniqueName = strings.Replace(resource.UniqueName, oldName, updatedName, 1)
+
 				pipeline.SaveBytes(resource, ogContent)
 			}
 		}

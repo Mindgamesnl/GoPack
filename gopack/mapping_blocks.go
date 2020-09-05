@@ -505,6 +505,7 @@ const blocks = `
 "wooden_trapdoor_top": "oak_trapdoor_top",
 "wooden_trapdoor_open": "oak_trapdoor_open",
 "trapdoor": "oak_trapdoor",
-"hopper_down": "hopper"
+"hopper_down": "hopper",
+"itemframe_background": "item_frame"
 }
 `

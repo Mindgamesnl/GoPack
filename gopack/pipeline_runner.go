@@ -73,7 +73,7 @@ func RunPipelines(originalPack ResourcePack) {
 
 		bar.Finish()
 
-		pipe.Flush(len(pipe.FileCache))
+		writtenFiles := pipe.Flush()
 		out := pipe.WrittenFiles
 
 		for s := range out {
@@ -120,7 +120,7 @@ func RunPipelines(originalPack ResourcePack) {
 		}
 
 		// read the zip and find the file size
-		logrus.Info(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))))
+		logrus.Info(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache))
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
 

@@ -34,6 +34,3 @@ INFO[0324] Finished pipeline, cleaning up..
 
 # TODO:
 - Subedive particle textures
-
-### Credits
-- Png compression by [lossy](https://github.com/foobaz/lossypng) (slightly modified to support in-memory compression)
