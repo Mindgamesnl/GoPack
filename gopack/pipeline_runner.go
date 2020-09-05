@@ -17,6 +17,7 @@ func AddPipeline(pipeline *Pipeline) {
 }
 
 func RunPipelines(originalPack ResourcePack) {
+	os.RemoveAll("out/")
 	ResetFileCache()
 	for i := range Pipelines {
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
@@ -124,7 +125,7 @@ func RunPipelines(originalPack ResourcePack) {
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
 
-	// os.RemoveAll("work/")
+	os.RemoveAll("work/")
 }
 
 func contains(s []string, e string) bool {
