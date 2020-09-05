@@ -17,19 +17,15 @@ GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resource
 mindgamesnl@redstaros-3 GoPack % go run main.go
 INFO[0000] pack.zip currently is 18MB                   
 INFO[0000] Loaded pack: Wakanda Forever. (1977-2020) in format 3 
-to 1.11 (remove secrets): 100.00% [======================================================================================================================================================================================] 228 p/s 1m16s
-INFO[0077] Flushing 2472 out of 2472 files              
-INFO[0079] out/1.11-1.12.zip turned out to be 15MB      
-to 1.13 (remove secrets, flattening): 100.00% [=========================================================================================================================================================================] 2916 p/s 1m16s
-INFO[0155] Flushing 2472 out of 4881 files              
-INFO[0158] out/1.13-1.14.zip turned out to be 15MB      
-to 1.15 (remove secrets, flattening): 100.00% [========================================================================================================================================================================] 41052 p/s 1m20s
-INFO[0239] Flushing 2471 out of 2567 files              
-INFO[0241] out/1.15.zip turned out to be 15MB           
-to 1.16 (remove secrets, flattening): 100.00% [========================================================================================================================================================================] 41568 p/s 1m20s
-INFO[0322] Flushing 2471 out of 2472 files              
-INFO[0324] out/1.16.zip turned out to be 15MB           
-INFO[0324] Finished pipeline, cleaning up..  
+to 1.11 (remove secrets): 100.00% [================] 328 p/s 1m8s
+INFO[0071] out/1.11-1.12.zip turned out to be 15MB and contains 2459 of 2472 
+to 1.13 (remove secrets, flattening): 100.00% [================] 2911 p/s 1m19s
+INFO[0152] out/1.13-1.14.zip turned out to be 15MB and contains 2472 of 4886 
+to 1.15 (remove secrets, flattening): 100.00% [================] 44027 p/s 1m16s
+INFO[0230] out/1.15.zip turned out to be 15MB and contains 2471 of 2568 
+to 1.16 (remove secrets, flattening): 100.00% [================] 46270 p/s 1m12s
+INFO[0304] out/1.16.zip turned out to be 15MB and contains 2471 of 2472 
+INFO[0304] Finished pipeline, cleaning up..             
 ``` 
 
 # TODO:
