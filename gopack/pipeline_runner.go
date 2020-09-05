@@ -44,9 +44,7 @@ func RunPipelines(originalPack ResourcePack) {
 		// go over all files yo, very epic
 		for s := range ntp {
 			originalFile := ntp[s]
-
 			file := &originalFile
-
 			if strings.Contains(file.OsPath, ".") {
 				// go over all handlers
 				hdlr := pipe.Handlers
@@ -94,37 +92,29 @@ func RunPipelines(originalPack ResourcePack) {
 		}
 
 		zipName := "out/" + pipe.OutputName
-
 		fer := os.MkdirAll(filepath.Dir(zipName), os.ModePerm)
 		if fer != nil {
 			panic(fer)
 		}
 
-		// Get a Buffer to Write To
 		outFile, err := os.Create(zipName)
 		if err != nil {
 			panic(err)
 		}
 		defer outFile.Close()
 
-		// Create a new zip archive.
 		w := zip.NewWriter(outFile)
 
-		// Add some files to the archive.
 		addFiles(w, pipe.OutFolder, "")
 
 		if err != nil {
 			panic(err)
 		}
-
 		err = w.Close()
 		if err != nil {
 			panic(err)
 		}
-
-		// read the zip and find the file size
-		fmt.Sprintf(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache))
-		statusReports = append(statusReports, )
+		statusReports = append(statusReports, fmt.Sprintf(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache)))
 		HashFile(zipName)
 	}
 	logrus.Info("Finished pipeline, cleaning up..")
