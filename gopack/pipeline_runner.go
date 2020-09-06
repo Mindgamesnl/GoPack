@@ -19,7 +19,7 @@ func AddPipeline(pipeline *Pipeline) {
 }
 
 func RunPipelines(originalPack ResourcePack) {
-	os.RemoveAll("out/")
+	_ = os.RemoveAll("out/")
 	ResetFileCache()
 	for i := range Pipelines {
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
@@ -37,7 +37,7 @@ func RunPipelines(originalPack ResourcePack) {
 			}
 		}
 
-		tmpl := `{{ green "` + pipe.Name + `:" }} {{percent .}} {{ bar . "[" "=" ">" " "}} {{speed . | rndcolor }} {{rtime . "ETA %s"}}`
+		tmpl := `{{ green "` + pipe.Name + `:" }} {{percent .}} {{speed . | rndcolor }} {{rtime . "%s remaining"}} {{ bar . "[" "=" ">" " "}}`
 		bar := pb.ProgressBarTemplate(tmpl).Start(tasks)
 		bar.SetRefreshRate(time.Millisecond * 10)
 
@@ -117,9 +117,8 @@ func RunPipelines(originalPack ResourcePack) {
 		statusReports = append(statusReports, fmt.Sprint(zipName, " turned out to be ", readableSize(len(DataFromFile(zipName))), " and contains ", writtenFiles, " of ", len(pipe.FileCache)))
 		HashFile(zipName)
 	}
-	logrus.Info("Finished pipeline, cleaning up..")
 
-	os.RemoveAll("work/")
+	_ = os.RemoveAll("work/")
 	for i := range statusReports {
 		logrus.Info(statusReports[i])
 	}
