@@ -13,7 +13,7 @@ type ResourcePack struct {
 
 func FromZip(filename string) ResourcePack {
 	logrus.Info(filename, " currently is ", readableSize(len(DataFromFile(filename))))
-	root := "work/original/"
+	root := TransPath("work/original/")
 
 	files, zipErr := Unzip(filename, root)
 	if zipErr != nil {
@@ -30,7 +30,7 @@ func FromZip(filename string) ResourcePack {
 	for i := range files {
 		path := strings.Replace(files[i], root, "", -1)
 
-		elements := strings.Split(path, "/")
+		elements := strings.Split(path, TransPath("/"))
 		name := elements[len(elements) - 1]
 
 		// duplicate file names can occur within a pack, so we should handle it

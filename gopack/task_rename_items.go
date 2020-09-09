@@ -22,7 +22,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 		converter := func(originalPack ResourcePack, resource *Resource, pipeline *Pipeline) {
 			// don't save original
-			if strings.Contains(resource.Path, "/" + oldName + ".") {
+			if strings.Contains(resource.Path, TransPath("/") + oldName + ".") {
 				ogContent := resource.GetPipelineContent(pipeline)
 				delete(pipeline.WriteQueue, pipeline.OutFolder+resource.Path)
 
@@ -62,12 +62,12 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 				// replace references to blocks/ and items/
 				asString := value.Str
 
-				asString = strings.Replace(asString, "items/", "item/", -1)
-				asString = strings.Replace(asString, "blocks/", "block/", -1)
+				asString = strings.Replace(asString, TransPath("items/"), TransPath("item/"), -1)
+				asString = strings.Replace(asString, TransPath("blocks/"), TransPath("block/"), -1)
 				asString = strings.ToLower(asString)
 
 				for s := range set {
-					if strings.HasSuffix(asString, "/" + s) && !strings.Contains(asString, "custom/") {
+					if strings.HasSuffix(asString, TransPath("/") + s) && !strings.Contains(asString, TransPath("custom/")) {
 						asString = strings.Replace(asString, s, set[s], -1)
 					}
 				}
@@ -117,7 +117,7 @@ func ConvertItems(pipeline *Pipeline, set map[string]string) {
 
 					// and translate it, again
 					for s := range set {
-						if strings.HasSuffix(asString, "/" + s) && !strings.Contains(asString, "custom/") {
+						if strings.HasSuffix(asString, TransPath("/") + s) && !strings.Contains(asString, TransPath("custom/")) {
 							asString = strings.Replace(asString, s, set[s], -1)
 						}
 					}

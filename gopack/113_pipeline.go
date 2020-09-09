@@ -1,7 +1,7 @@
 package gopack
 
 func Make113Pipeline() {
-	pipeline := CreatePipeline("to 1.13 (remove secrets, flattening)", "work/113/", "1.13-1.14.zip")
+	pipeline := CreatePipeline("to 1.13 (remove secrets, flattening)", TransPath("work/113/"), "1.13-1.14.zip")
 
 
 	// update format

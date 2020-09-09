@@ -11,7 +11,7 @@ import (
 var hashes = make(map[string]string)
 
 func HashFile(path string) {
-	elements := strings.Split(path, "/")
+	elements := strings.Split(path, TransPath("/"))
 	name := elements[len(elements) - 1]
 	file, err := os.Open(path)
 	if err != nil {
@@ -33,5 +33,5 @@ func HashFile(path string) {
 
 func SaveHashes()  {
 	hashes := StructToJson(hashes)
-	WriteToFile("out/hashes.json", []byte(hashes))
+	WriteToFile(TransPath("out/hashes.json"), []byte(hashes))
 }

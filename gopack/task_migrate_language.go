@@ -47,5 +47,5 @@ func MigrateLanguage(pipeline *Pipeline, set map[string]string) {
 	}
 
 	// rename these files
-	pipeline.AddPathContainsHandler("minecraft/lang/", converter)
+	pipeline.AddPathContainsHandler(TransPath("minecraft/lang/"), converter)
 }

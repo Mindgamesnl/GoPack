@@ -19,7 +19,7 @@ func AddPipeline(pipeline *Pipeline) {
 }
 
 func RunPipelines(originalPack ResourcePack) {
-	_ = os.RemoveAll("out/")
+	_ = os.RemoveAll(TransPath("out/"))
 	ResetFileCache()
 	for i := range Pipelines {
 		pack := originalPack // copy the pack for every pipeline, to prevent destruction
@@ -91,7 +91,7 @@ func RunPipelines(originalPack ResourcePack) {
 			}
 		}
 
-		zipName := "out/" + pipe.OutputName
+		zipName := TransPath("out/") + pipe.OutputName
 		fer := os.MkdirAll(filepath.Dir(zipName), os.ModePerm)
 		if fer != nil {
 			panic(fer)
@@ -118,7 +118,7 @@ func RunPipelines(originalPack ResourcePack) {
 		HashFile(zipName)
 	}
 
-	_ = os.RemoveAll("work/")
+	_ = os.RemoveAll(TransPath("work/"))
 	for i := range statusReports {
 		logrus.Info(statusReports[i])
 	}

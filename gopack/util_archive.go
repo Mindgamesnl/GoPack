@@ -135,8 +135,8 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 				panic(err)
 			}
 		} else if file.IsDir() {
-			newBase := basePath + file.Name() + "/"
-			addFiles(w, newBase, baseInZip  + file.Name() + "/")
+			newBase := basePath + file.Name() + TransPath("/")
+			addFiles(w, newBase, baseInZip  + file.Name() + TransPath("/"))
 		}
 	}
 }

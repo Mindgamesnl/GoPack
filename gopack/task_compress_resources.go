@@ -4,10 +4,10 @@ import "strings"
 
 // don't compress highly visible assets
 var compressionWhitelist = []string{
-	"gui/",     // skip inventories etc
+	TransPath("gui/"),     // skip inventories etc
 	"pack.png", // skip the pack icon
 	".lang",    // skip language files
-	"lang/",    // skip language files
+	TransPath("lang/"),    // skip language files
 }
 
 func CompressResources(pipeline *Pipeline) {
