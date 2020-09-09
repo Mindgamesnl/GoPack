@@ -9,7 +9,7 @@ GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resource
 # How to use
 1. Download the latest [release](https://github.com/Mindgamesnl/GoPack/releases) for your platform.
 2. Place the binary next to your 1.12 resourcepack, which must be named `pack.zip`
-3. Execute with `./GoPack` or `./GoPack.exe`
+3. Execute with `./GoPack` or double click `GoPack.exe` on windows
 4. That's it! give it some time and watch your packs appear in the `out/` directory.
 
 ### Example output:
