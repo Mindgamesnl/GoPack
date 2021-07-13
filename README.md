@@ -4,7 +4,7 @@
 
 ##### Fast and native minecraft resourcepack translator in Go
 
-GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15` and `1.16` resourcepacks from a single `1.12.2` resource pack. It does this by completely scanning the input pack and then running migrations to rename all the assets and update the json pointers. It also removes any potential secrets during this process and can even minimize assets. GoPack supports Textures, Models, Sounds, Asset Compression and Language Files. 
+GoPack automatically compiles `1.12`, `1.13`, `1.14`, `1.15`, `1.16` and `1.17` resourcepacks from a single `1.12.2` resource pack. It does this by completely scanning the input pack and then running migrations to rename all the assets and update the json pointers. It also removes any potential secrets during this process and can even minimize assets. GoPack supports Textures, Models, Sounds, Asset Compression and Language Files. 
 
 # How to use
 1. Download the latest [release](https://github.com/Mindgamesnl/GoPack/releases) for your platform.
