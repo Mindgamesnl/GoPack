@@ -5,4 +5,5 @@ func RegisterPipelines()  {
 	Make113Pipeline()
 	Make115Pipeline()
 	Make116Pipeline()
+	Make117Pipeline()
 }
